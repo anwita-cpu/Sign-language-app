@@ -68,5 +68,26 @@ body {
   font-size: 17px;
 }
 
-  
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;   /* two equal columns */
+  gap: 12px;                        /* space between the cards */
+  margin: 24px 0;                   /* space above and below */
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;           /* stacks emoji, title, subtitle */
+  gap: 2px;
+  background: var(--card);
+  border: 2px solid var(--line);
+  border-radius: 20px;
+  padding: 16px;
+  color: var(--text);
+  text-decoration: none;            /* removes the blue underline */
+}
+
+.tile-emoji { font-size: 1.8rem; }
+.tile-title { font-family: "Baloo 2", sans-serif; font-size: 1.15rem; font-weight: 600; }
+.tile-sub   { font-size: 0.9rem; color: var(--muted); }
   
