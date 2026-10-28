@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signify · Setup</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Hind:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <main>
+
+    <a href="main.html" class="back">← Back</a>
+
+    <h1>Let's get you set up 💜</h1>
+    <p class="setup-sub">Just 3 quick questions before your first lesson.</p>
+
+    <form id="setup-form" class="setup">
+
+      <!-- QUESTION 1 -->
+      <fieldset>
+        <legend>1. Who are you learning for?</legend>
+        <label class="choice"><input type="radio" name="who" value="child" required> 👨‍👩‍👧 My child</label>
+        <label class="choice"><input type="radio" name="who" value="sibling"> 👧 My brother or sister</label>
+        <label class="choice"><input type="radio" name="who" value="student"> 🧑‍🏫 My student</label>
+        <label class="choice"><input type="radio" name="who" value="friend"> 🤝 A friend</label>
+         <label class="choice"><input type="radio" name="who" value="fun"> ✨ Just for fun</label>
+      </fieldset>
+
+      <!-- QUESTION 2 -->
+      <fieldset>
+      <legend>2. Who will you sign with? <span class="optional">(optional)</span></legend>
+        <input type="text" id="their-name" class="text-input" placeholder="e.g. Riya">
+      </fieldset>
+
+      <!-- QUESTION 3 -->
+      <fieldset>
+        <legend>3. Daily goal</legend>
+        <label class="choice"><input type="radio" name="goal" value="5" required> 🌱 5 minutes a day</label>
+        <label class="choice"><input type="radio" name="goal" value="10"> 🌿 10 minutes a day</label>
+        <label class="choice"><input type="radio" name="goal" value="15"> 🌳 15 minutes a day</label>
+      </fieldset>
+
+      <button type="submit" class="big-button start">Start Lesson 1 ➜</button>
+    </form>
+
+  </main>
+</body>
+</html>
