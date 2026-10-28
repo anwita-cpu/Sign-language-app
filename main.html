@@ -59,10 +59,10 @@
     </section>
 
     <script>
-    s
+    
     const WORKER_URL = "https://signify-proxy.anwitaghosh20.workers.dev";
 
-    // Find the parts of the page using their ids
+    
     const form = document.getElementById("chat-form");
     const input = document.getElementById("chat-input");
     const messages = document.getElementById("messages");
@@ -81,9 +81,9 @@
       return bubble;
     }
 
-    // When the user presses Send (or Enter)
+    
     form.addEventListener("submit", async function (event) {
-      event.preventDefault();               // stops the page from reloading
+      event.preventDefault();               
       const question = input.value.trim();
       if (question === "") return;
 
@@ -91,7 +91,7 @@
       history.push({ role: "user", content: question });
       input.value = "";
 
-      // Show a "thinking" bubble and lock the button while waiting
+      
       const thinking = addMessage("Thinking... 🤔", "bot");
       sendButton.disabled = true;
 
