@@ -44,6 +44,30 @@
       <button type="submit" class="big-button start">Start Lesson 1 ➜</button>
     </form>
 
+    <script>
+    const setupForm = document.getElementById("setup-form");
+
+    setupForm.addEventListener("submit", function (event) {
+      event.preventDefault();   // stop the page from reloading
+
+      // Read the answers
+      const who  = document.querySelector('input[name="who"]:checked').value;
+      const name = document.getElementById("their-name").value.trim();
+      const goal = document.querySelector('input[name="goal"]:checked').value;
+
+      // Save them in the browser so other pages can use them
+      const profile = { who: who, name: name, goal: goal };
+      try {
+        localStorage.setItem("signify-profile", JSON.stringify(profile));
+      } catch (error) {
+        // If saving fails (e.g. private browsing), the app still works
+      }
+
+      // Go to Lesson 1
+      window.location.href = "lesson1.html";
+    });
+  </script>
+
   </main>
 </body>
 </html>
