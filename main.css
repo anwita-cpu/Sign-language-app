@@ -1,3 +1,4 @@
+]
 
 main{
   max-width: 560px;
@@ -266,11 +267,21 @@ body {
   color: var(--muted);
 }
 
- .river{
-  padding: 20px 0 40px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='560'%3E%3Cpath d='M80,-70 C80,0 150,0 150,70 C150,140 220,140 220,210 C220,280 150,280 150,350 C150,420 80,420 80,490 C80,560 150,560 150,630' fill='none' stroke='%23C9E7F8' stroke-width='90' stroke-linecap='round'/%3E%3Cpath d='M80,-70 C80,0 150,0 150,70 C150,140 220,140 220,210 C220,280 150,280 150,350 C150,420 80,420 80,490 C80,560 150,560 150,630' fill='none' stroke='%23E8F5FD' stroke-width='6' stroke-dasharray='14 22' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: repeat-y;
-  background-position: center 20px;
+ .river {
+  padding: 30px 0 50px;
+  border-radius: 28px;
+  background:
+    /* trees down the left side */
+    url("trees.svg") left top / 70px auto repeat-y,
+    
+    url("trees.svg") right top 60px / 70px auto repeat-y,
+   
+    linear-gradient(to right,
+      #8FD19A 0 70px,
+      transparent 70px calc(100% - 70px),
+      #8FD19A calc(100% - 70px)),
+    */
+    linear-gradient(#4A9BE0, #2C6DB5);
 }
 
 
