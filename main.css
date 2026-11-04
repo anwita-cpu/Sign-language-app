@@ -1,4 +1,4 @@
-]
+
 
 main{
   max-width: 560px;
@@ -214,11 +214,13 @@ body {
   font-weight: 600;
 }
 
-
+.choice input {
   accent-color: var(--green);
   width: 18px;
   height: 18px;
 }
+
+
 
 
 .choice:has(input:checked) {
@@ -280,7 +282,7 @@ body {
       #8FD19A 0 70px,
       transparent 70px calc(100% - 70px),
       #8FD19A calc(100% - 70px)),
-    */
+    
     linear-gradient(#4A9BE0, #2C6DB5);
 }
 
