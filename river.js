@@ -1,4 +1,4 @@
-river.js: adds the islands, start dock, sea route and the boat to the river page.
+/* river.js: adds the islands, start dock, sea route and the boat to the river page.
    Add this line to the river page only, just before </body>:
      <script src="river.js" defer></script>
 
