@@ -498,5 +498,4 @@
   window.addEventListener('load', layout);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
 })();
-2. river.html: Open river.html, click ✏️, select all, paste this, and commit.
 
