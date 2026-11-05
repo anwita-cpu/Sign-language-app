@@ -1,13 +1,3 @@
-/* river.js: adds the islands, start dock, sea route and the boat to the river page.
-   Add this line to the river page only, just before </body>:
-     <script src="river.js" defer></script>
-
-   Optional: put a class on each .stop to show progress:
-     class="stop done"     finished (green check)
-     class="stop current"  up next (glowing). If you leave this out, the first
-                           stop that isn't done or locked glows.
-     class="stop locked"   can't open yet (frosted buoy with a lock)
-*/
 (function () {
   'use strict';
 
@@ -237,17 +227,6 @@
     '<path d="M10 32 Q25 22 40 32 Q25 42 10 32 Z"/><path d="M0 32 L10 25 L10 39 Z"/>' +
     '<path d="M56 40 Q71 30 86 40 Q71 50 56 40 Z"/><path d="M46 40 L56 33 L56 47 Z"/></g></svg>';
 
-  const DIYA_SVG =
-    '<svg width="46" height="46" viewBox="0 0 46 46" aria-hidden="true">' +
-    '<ellipse cx="23" cy="42" rx="17" ry="3" fill="rgba(255,190,80,0.35)"/>' +
-    '<path d="M38 25 Q45 22 44.5 17 Q41 21 36 23.5 Z" fill="#C2562E" stroke="#8E3A1E" stroke-width="1.2"/>' +
-    '<path d="M5 26 Q23 22 41 26 Q38 40 23 41 Q8 40 5 26 Z" fill="#C2562E" stroke="#8E3A1E" stroke-width="1.5"/>' +
-    '<path d="M5 26 Q23 22 41 26 Q23 31 5 26 Z" fill="#E0784A"/>' +
-    '<path d="M9 31 Q23 35 37 31" stroke="#FFD25A" stroke-width="1.4" fill="none" stroke-dasharray="1.5 3" stroke-linecap="round"/>' +
-    '<circle cx="23" cy="36" r="1.6" fill="#FFD25A"/>' +
-    '<g class="flame"><path d="M43 3 Q48 11 45.5 16.5 Q43.5 18.5 41.5 16.5 Q38.5 11 43 3 Z" fill="#FFB020"/>' +
-    '<path d="M43 8.5 Q45.5 12.5 44.3 15.5 Q43.4 16.4 42.5 15.5 Q41 12.5 43 8.5 Z" fill="#FFF3B0"/></g>' +
-    '</svg>';
 
   /* ---------- helpers ---------- */
   const mk = (tag, cls) => {
@@ -266,14 +245,21 @@
   };
 
   /* ---------- 1. turn each node into a floating buoy ---------- */
+  const LANTERNS = ['rani', 'indigo', 'plum', 'wine', 'ocean'];
+  let lessonCount = 0;
   stops.forEach((stop) => {
     const node = stop.querySelector('.node');
+    if (node && node.classList.contains('learn') && ![...node.classList].some((c) => c.startsWith('lantern-'))) {
+      node.classList.add('lantern-' + LANTERNS[lessonCount % LANTERNS.length]);
+      lessonCount++;
+    }
     if (!node || node.parentElement.classList.contains('buoy')) return;
     const buoy = mk('span', 'buoy');
     node.parentNode.insertBefore(buoy, node);
     buoy.innerHTML = '<span class="ripple" aria-hidden="true"></span><span class="ripple r2" aria-hidden="true"></span>';
     buoy.appendChild(node);
     if (stop.classList.contains('locked')) node.setAttribute('aria-disabled', 'true');
+    if (node.classList.contains('final')) stop.classList.add('final-stop');
   });
 
   const hasStatus = stops.some((s) => ['done', 'locked', 'current'].some((c) => s.classList.contains(c)));
@@ -466,79 +452,9 @@
     });
   };
 
-  const placeDiyas = () => {
-    scene.querySelectorAll('.river-diya').forEach((n) => n.remove());
-    const W = river.clientWidth;
-    const H = river.scrollHeight;
-    const b = river.getBoundingClientRect();
-    const room = Math.min(b.left, document.documentElement.clientWidth - b.right);
-    const wide = room > 150;
-    let seed = 4242;
-    const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-
-    // places a diya must stay away from: buoys + labels, islands, boat spots, the dock
-    const keepOut = [];
-    stops.forEach((s, i) => {
-      const c = centerOf(i);
-      keepOut.push({ x: c.b.x - 30, y: c.b.y - 30, w: c.b.w + 60, h: c.b.h + 90 });
-      const sp = spot(i);
-      keepOut.push({ x: sp.x - 10, y: sp.y - 10, w: BOAT_W + 20, h: BOAT_H + 20 });
-      const label = stops[i].querySelector('.label');
-      if (label) {
-        const l = rel(label);
-        keepOut.push({ x: l.x - 16, y: l.y - 16, w: l.w + 32, h: l.h + 32 });
-      }
-    });
-    scene.querySelectorAll('.river-isle').forEach((el) => {
-      keepOut.push({ x: el.offsetLeft - 10, y: el.offsetTop - 10, w: el.offsetWidth + 20, h: el.offsetHeight + 20 });
-    });
-    const d = rel(dock);
-    keepOut.push({ x: d.x, y: d.y, w: d.w, h: d.h });
-    const sp0 = spot(-1);
-    keepOut.push({ x: sp0.x - 10, y: sp0.y - 10, w: BOAT_W + 20, h: BOAT_H + 20 });
-
-    const hits = (x, y) => keepOut.some((r) => x + 46 > r.x && x < r.x + r.w && y + 46 > r.y && y < r.y + r.h);
-    const placed = [];
-    const tooClose = (x, y, gap) => placed.some((q) => Math.hypot(q.x - x, q.y - y) < gap);
-
-    const add = (x, y) => {
-      const n = placed.length;
-      placed.push({ x, y });
-      const el = mk('div', 'river-diya');
-      el.style.cssText =
-        `left:${x.toFixed(0)}px;top:${y.toFixed(0)}px;` +
-        `animation-duration:${(3.4 + rnd() * 2.4).toFixed(1)}s;animation-delay:${(-rnd() * 5).toFixed(1)}s`;
-      el.innerHTML = `<span class="diya-glow" style="animation-delay:${(-rnd() * 1.8).toFixed(2)}s"></span>${DIYA_SVG}`;
-      scene.appendChild(el);
-      return n;
-    };
-
-    // a couple by the dock to light the way out
-    const e = dockEnd();
-    add(e.x + 26, e.y + 40);
-    add(e.x + 84, e.y + 6);
-
-    // the rest scattered over the water at random spots
-    const minX = wide ? -Math.min(room - 20, 260) : 4;
-    const maxX = wide ? W + Math.min(room - 20, 260) - 46 : W - 50;
-    const top = centerOf(0).y - 40;
-    const bottom = Math.min(H - 60, centerOf(stops.length - 1).y + 120);
-    const target = Math.round(stops.length * (wide ? 2.2 : 1.4));
-    const gap = wide ? 130 : 110;
-    let tries = 0;
-    while (placed.length < target + 2 && tries < 1500) {
-      tries++;
-      const x = minX + rnd() * (maxX - minX);
-      const y = top + rnd() * (bottom - top);
-      if (hits(x, y) || tooClose(x, y, gap)) continue;
-      add(x, y);
-    }
-  };
-
   const layout = () => {
     drawRoute();
     placeIslands();
-    placeDiyas();
     placeBoat(false);
   };
 
@@ -582,3 +498,5 @@
   window.addEventListener('load', layout);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(layout);
 })();
+2. river.html: Open river.html, click ✏️, select all, paste this, and commit.
+
