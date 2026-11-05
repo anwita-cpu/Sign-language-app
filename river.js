@@ -423,7 +423,7 @@
     const W = river.clientWidth;
     const b = river.getBoundingClientRect();
     const room = Math.min(b.left, document.documentElement.clientWidth - b.right);
-    const wide = room > 170;
+    const wide = room > 150;
     const spots = [];
 
     if (wide) {
@@ -445,15 +445,18 @@
 
     spots.forEach((sp, n) => {
       const isle = n === spots.length - 1 ? TREASURE : ISLES[n % ISLES.length];
-      const s = wide ? Math.min(1, (room - 30) / isle.w) : 0.6;
+      const s = wide ? Math.min(1, (room - 24) / isle.w) : 0.55;
       const w = isle.w * s;
       const h = isle.h * s;
       let x;
       if (wide) {
-        const push = Math.max(0, Math.min((n * 47) % 50, room - w - 30));
-        x = sp.side === 'left' ? -w - 16 - push : W + 16 + push;
+        // centre the island in the open sea beside the path, with a little wobble
+        const free = room - w - 12;
+        const wobble = free > 0 ? ((n * 47) % 41 - 20) / 20 * Math.min(free / 2, 40) : 0;
+        const mid = room / 2 + w / 2 + wobble;
+        x = sp.side === 'left' ? -mid : W + mid - w;
       } else {
-        x = sp.side === 'left' ? -w * 0.3 : W - w * 0.7;
+        x = sp.side === 'left' ? -w * 0.12 : W - w * 0.88;
       }
       const y = sp.y - h / 2 + (wide ? ((n * 31) % 40) - 20 : 0);
       const el = mk('div', 'river-isle');
@@ -469,7 +472,7 @@
     const H = river.scrollHeight;
     const b = river.getBoundingClientRect();
     const room = Math.min(b.left, document.documentElement.clientWidth - b.right);
-    const wide = room > 170;
+    const wide = room > 150;
     let seed = 4242;
     const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
 
