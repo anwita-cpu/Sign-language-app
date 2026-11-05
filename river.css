@@ -183,7 +183,7 @@ html:has(> body.ocean-page) { overflow-x: hidden; }
   width: var(--buoy);
   height: var(--buoy);
   font-size: 3rem;
-  border: 6px solid #fff;
+  border: 3px solid rgba(255, 236, 200, 0.95);
   animation: buoy-bob 4.4s ease-in-out infinite;
   transition: transform 0.1s, box-shadow 0.1s, scale 0.2s;
 }
@@ -196,18 +196,18 @@ html:has(> body.ocean-page) { overflow-x: hidden; }
 .river .node:hover { scale: 1.06; }
 .river .node:focus-visible { outline: 4px solid #FFE27A; outline-offset: 5px; }
 
-/* Buoys glow like lamps at night */
+/* Glowing lantern buoys, lit from inside */
 .river .node.learn {
-  background: radial-gradient(circle at 34% 28%, #D4CCFF 0%, #8B7CF6 48%, #6A5AD9 100%);
-  box-shadow: 0 8px 0 #5444CF, 0 0 36px 8px rgba(139, 124, 246, 0.55);
+  background: radial-gradient(circle at 50% 45%, #FBF7FF 0%, #D3C8FF 30%, #8B7CF6 70%, #5444CF 100%);
+  box-shadow: 0 0 46px 13px rgba(150, 130, 255, 0.5), inset 0 0 20px rgba(245, 240, 255, 0.6);
 }
 .river .node.quiz {
-  background: radial-gradient(circle at 34% 28%, #FFE9A8 0%, #FFC24B 50%, #E39A1C 100%);
-  box-shadow: 0 8px 0 #C98A1E, 0 0 36px 8px rgba(255, 194, 75, 0.45);
+  background: radial-gradient(circle at 50% 45%, #FFFBE6 0%, #FFE08A 30%, #FFB020 70%, #C26A00 100%);
+  box-shadow: 0 0 46px 13px rgba(255, 190, 60, 0.45), inset 0 0 20px rgba(255, 250, 220, 0.6);
 }
 .river .node.ghat {
-  background: radial-gradient(circle at 34% 28%, #FFD0A8 0%, #FF9F5A 50%, #E57A30 100%);
-  box-shadow: 0 8px 0 #C2652A, 0 0 36px 8px rgba(255, 159, 90, 0.5);
+  background: radial-gradient(circle at 50% 45%, #FFF0DC 0%, #FFB27A 30%, #FF6B35 70%, #B0300F 100%);
+  box-shadow: 0 0 46px 13px rgba(255, 110, 50, 0.45), inset 0 0 20px rgba(255, 240, 220, 0.6);
 }
 
 /* Finished: green check badge */
@@ -239,10 +239,11 @@ html:has(> body.ocean-page) { overflow-x: hidden; }
   50%      { transform: scale(1.14); opacity: 0.4; }
 }
 
-/* Locked: frosted buoy with a lock */
+/* Locked: an unlit lantern with a lock */
 .river .stop.locked .node {
-  background: radial-gradient(circle at 34% 28%, #FFFFFF 0%, #D2E4F6 55%, #A8C5E3 100%);
-  box-shadow: 0 8px 0 #86A8CC, 0 0 22px 2px rgba(180, 210, 240, 0.3);
+  background: radial-gradient(circle at 50% 45%, #E9EEF8 0%, #B9C6DE 50%, #7D8DAE 100%);
+  border-color: rgba(220, 230, 250, 0.7);
+  box-shadow: 0 0 14px 2px rgba(180, 200, 240, 0.25);
   font-size: 0;
   cursor: not-allowed;
 }
@@ -250,7 +251,7 @@ html:has(> body.ocean-page) { overflow-x: hidden; }
   content: "";
   position: absolute;
   inset: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235D7FA8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E") center / 44px no-repeat;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234D5C7A' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='5' y='11' width='14' height='10' rx='2'/%3E%3Cpath d='M8 11V7a4 4 0 0 1 8 0v4'/%3E%3C/svg%3E") center / 44px no-repeat;
 }
 .river .buoy.shake { animation: buoy-shake 0.4s; }
 @keyframes buoy-shake {
