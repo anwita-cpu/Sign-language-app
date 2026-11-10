@@ -60,5 +60,176 @@
     </p>
 
   </main>
+
+    <script>
+    // ===== 1. YOUR SIGNS =====
+    const signs = {
+      water:      { en: "Water",      hi: "पानी",   emoji: "💧", video: "SgVLj-CHvZ4", start: 40,  end: 49  },
+      milk:       { en: "Milk",       hi: "दूध",    emoji: "🥛", video: "SgVLj-CHvZ4", start: 70,  end: 81  },
+      roti:       { en: "Roti",       hi: "रोटी",   emoji: "🫓", video: "SgVLj-CHvZ4", start: 82,  end: 98  },
+      vegetables: { en: "Vegetables", hi: "सब्ज़ी", emoji: "🥕", video: "SgVLj-CHvZ4", start: 99,  end: 106 },
+      rice:       { en: "Rice",       hi: "चावल",  emoji: "🍚", video: "SgVLj-CHvZ4", start: 127, end: 132 },
+      banana:     { en: "Banana",     hi: "केला",   emoji: "🍌", video: "SgVLj-CHvZ4", start: 143, end: 153 },
+      apple:      { en: "Apple",      hi: "सेब",    emoji: "🍎", video: "SgVLj-CHvZ4", start: 160, end: 166 },
+    };
+
+    // ===== 2. WHAT EACH STOP TEACHES =====
+    const lessons = {
+      1: { type: "learn", words: ["water", "milk"] },
+      2: { type: "learn", words: ["roti", "rice"] },
+      3: { type: "quiz",  words: ["water", "milk", "roti", "rice"] },
+      4: { type: "learn", words: ["banana", "apple", "vegetables"] },
+    };
+
+    // ===== 3. WHICH STOP ARE WE ON? (from lesson.html?stop=1) =====
+    const stopNumber = parseInt(new URLSearchParams(location.search).get("stop")) || 1;
+    const lesson = lessons[stopNumber];
+
+    // ===== 4. FIND PAGE PARTS =====
+    const learnScreen  = document.getElementById("learn-screen");
+    const quizScreen   = document.getElementById("quiz-screen");
+    const finishScreen = document.getElementById("finish-screen");
+    const progressFill = document.getElementById("progress-fill");
+    const optionsBox   = document.getElementById("options");
+    const feedback     = document.getElementById("feedback");
+    const continueBtn  = document.getElementById("continue-btn");
+
+    // Show one screen, hide the others
+    function show(screen) {
+      [learnScreen, quizScreen, finishScreen].forEach(s => s.hidden = (s !== screen));
+    }
+
+    // Play one sign in a video box (muted, so browsers allow autoplay)
+    function playSign(iframeId, sign) {
+      const url = "https://www.youtube-nocookie.com/embed/" + sign.video +
+        "?start=" + sign.start + "&end=" + sign.end +
+        "&autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1";
+      document.getElementById(iframeId).src = url;
+    }
+
+    // ===== 5. PLAN THE STEPS =====
+    let learnQueue = [];
+    let quizQueue = [];
+    if (lesson) {
+      learnQueue = lesson.type === "learn" ? [...lesson.words] : [];
+      quizQueue = shuffle([...lesson.words]);
+    }
+    let totalSteps = learnQueue.length + quizQueue.length;
+    let stepsDone = 0;
+
+    function updateProgress() {
+      progressFill.style.width = (stepsDone / totalSteps * 100) + "%";
+    }
+
+    function shuffle(list) {
+      return list.sort(() => Math.random() - 0.5);
+    }
+
+    // ===== 6. LEARN =====
+    let currentLearn;
+    function nextLearn() {
+      if (learnQueue.length === 0) { nextQuiz(); return; }
+      currentLearn = signs[learnQueue.shift()];
+      show(learnScreen);
+      playSign("learn-video", currentLearn);
+      document.getElementById("learn-emoji").textContent = currentLearn.emoji;
+      document.getElementById("learn-en").textContent = currentLearn.en;
+      document.getElementById("learn-hi").textContent = currentLearn.hi;
+    }
+
+    document.getElementById("replay-btn").addEventListener("click", () => playSign("learn-video", currentLearn));
+    document.getElementById("next-btn").addEventListener("click", () => {
+      stepsDone++;
+      updateProgress();
+      nextLearn();
+    });
+
+    // ===== 7. QUIZ =====
+    function nextQuiz() {
+      if (quizQueue.length === 0) { finish(); return; }
+      const answerKey = quizQueue.shift();
+      const answer = signs[answerKey];
+      show(quizScreen);
+      playSign("quiz-video", answer);
+      feedback.textContent = "";
+      continueBtn.hidden = true;
+
+      // The right answer + 3 random wrong ones
+      const wrong = shuffle(Object.keys(signs).filter(k => k !== answerKey)).slice(0, 3);
+      const choices = shuffle([answerKey, ...wrong]);
+
+      optionsBox.innerHTML = "";
+      choices.forEach(key => {
+        const s = signs[key];
+        const btn = document.createElement("button");
+        btn.className = "option";
+        btn.innerHTML = '<span class="opt-emoji"></span><span class="opt-en"></span><span class="opt-hi"></span>';
+        btn.querySelector(".opt-emoji").textContent = s.emoji;
+        btn.querySelector(".opt-en").textContent = s.en;
+        btn.querySelector(".opt-hi").textContent = s.hi;
+        btn.addEventListener("click", () => pick(btn, key, answerKey));
+        optionsBox.appendChild(btn);
+      });
+    }
+
+    function pick(btn, key, answerKey) {
+      const allBtns = optionsBox.querySelectorAll(".option");
+      allBtns.forEach(b => b.disabled = true);
+
+      if (key === answerKey) {
+        btn.classList.add("right");
+        feedback.textContent = "✅ Correct!";
+        stepsDone++;
+      } else {
+        btn.classList.add("wrong");
+        // Highlight the right one
+        allBtns.forEach(b => {
+          if (b.querySelector(".opt-en").textContent === signs[answerKey].en) b.classList.add("right");
+        });
+        feedback.textContent = "Not quite. It's " + signs[answerKey].en + " 💜";
+        // Ask this one again later
+        quizQueue.push(answerKey);
+        totalSteps++;
+      }
+      updateProgress();
+      continueBtn.hidden = false;
+    }
+
+    continueBtn.addEventListener("click", nextQuiz);
+
+    // ===== 8. FINISH =====
+    function finish() {
+      show(finishScreen);
+      progressFill.style.width = "100%";
+
+      // Save progress so the boat sails on
+      try {
+        const done = parseInt(localStorage.getItem("signify-progress")) || 0;
+        if (stopNumber > done) localStorage.setItem("signify-progress", stopNumber);
+      } catch (e) {}
+
+      // Personal "try it tonight" message
+      let name = "someone";
+      try {
+        const profile = JSON.parse(localStorage.getItem("signify-profile"));
+        if (profile && profile.name) name = profile.name;
+      } catch (e) {}
+
+      const learned = lesson.type === "learn" ? lesson.words.map(w => signs[w].en).join(" and ") : null;
+      document.getElementById("finish-text").textContent = learned
+        ? "You learned " + learned + "! Try signing them with " + name + " today. 🌙"
+        : "Great job, you remembered all your signs! 🌟";
+    }
+
+    // ===== 9. START! =====
+    if (!lesson) {
+      show(finishScreen);
+      document.querySelector("#finish-screen h1").textContent = "Coming soon 🛠️";
+      document.getElementById("finish-text").textContent = "This stop isn't ready yet. Check back later!";
+    } else {
+      updateProgress();
+      nextLearn();
+    }
+  </script>
 </body>
 </html>
