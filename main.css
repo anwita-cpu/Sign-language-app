@@ -428,3 +428,5 @@ body {
   color: var(--muted);
   text-align: center;
 }
+
+[hidden] { display: none !important; }
