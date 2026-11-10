@@ -432,3 +432,14 @@ body {
 [hidden] { display: none !important; }
 .video-box iframe { pointer-events: none; }
 
+/* Quiz video: show only the signer, hide the word and picture */
+.video-box.crop {
+  aspect-ratio: 8 / 9;      /* half as wide as a normal video */
+  max-width: 380px;
+  margin: 0 auto;
+}
+.video-box.crop iframe {
+  width: 200%;              /* the video is twice as wide as the box */
+  margin-left: -76%;        /* slide it left so only the signer shows */
+}
+
