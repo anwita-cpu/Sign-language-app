@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signify · Lesson</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Hind:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <main>
+
+    <!-- TOP: close button + progress bar -->
+    <div class="lesson-top">
+      <a href="river.html" class="close">✕</a>
+      <div class="progress"><span id="progress-fill"></span></div>
+    </div>
+
+    <!-- SCREEN 1: LEARN A SIGN -->
+    <section id="learn-screen" class="screen">
+      <p class="step-label">New sign</p>
+      <div class="video-box">
+        <iframe id="learn-video" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <div class="word-card">
+        <span id="learn-emoji" class="word-emoji"></span>
+        <div>
+          <div id="learn-en" class="word-en"></div>
+          <div id="learn-hi" class="word-hi"></div>
+        </div>
+      </div>
+      <button id="replay-btn" class="small-btn">🔁 Watch again</button>
+      <button id="next-btn" class="big-button start">Got it →</button>
+    </section>
+
+    <!-- SCREEN 2: PRACTICE -->
+    <section id="quiz-screen" class="screen" hidden>
+      <p class="step-label">What does this sign mean?</p>
+      <div class="video-box">
+        <iframe id="quiz-video" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      </div>
+      <div id="options" class="options"></div>
+      <p id="feedback" class="feedback"></p>
+      <button id="continue-btn" class="big-button start" hidden>Continue →</button>
+    </section>
+
+    <!-- SCREEN 3: FINISH -->
+    <section id="finish-screen" class="screen finish" hidden>
+      <div class="finish-emoji">🎉</div>
+      <h1>Stop complete!</h1>
+      <p id="finish-text"></p>
+      <a href="river.html" class="big-button start">Back to the ocean 🛶</a>
+    </section>
+
+    <!-- CREDIT (ISLRTC asks to be acknowledged) -->
+    <p class="credit">
+      Sign videos: Indian Sign Language Research and Training Centre (ISLRTC),
+      Department of Empowerment of Persons with Disabilities,
+      Ministry of Social Justice and Empowerment, Government of India.
+    </p>
+
+  </main>
+</body>
+</html>
