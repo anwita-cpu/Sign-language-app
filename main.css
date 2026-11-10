@@ -430,3 +430,5 @@ body {
 }
 
 [hidden] { display: none !important; }
+.video-box iframe { pointer-events: none; }
+
