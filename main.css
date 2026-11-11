@@ -715,3 +715,11 @@ body.lesson-page::after {
 #learn-screen .lesson-video-col .btn-main { margin-left: 0; }
 @media (max-width: 600px) {
   #learn-screen .lesson-actions { order: 0; }
+
+  /* "How to practise" sits under the video, steps side by side */
+.lesson-video-col .practice-tips .tip-steps {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px;
+}
+.lesson-video-col .practice-tips .tip-steps li { align-items: flex-start; }
+@media (max-width: 760px) {
+  .lesson-video-col .practice-tips .tip-steps { grid-template-columns: 1fr; }
