@@ -4,71 +4,308 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Signify</title>
- 
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Hind:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Hind:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="main.css">
 </head>
-<body>
+<body class="home-page">
 
   <main>
-    <!-- GREETING -->
-    <section class="greeting">
-      <h1>Namaste! 👋</h1>
-      <p>Ready to learn a few signs today?</p>
-    </section>
 
-    <!-- BIG ISL BUTTON (goes to the setup page, which we'll make next) -->
-    <a href="setup.html" class="big-button">
-      <div>
-        <div class="big-title">Learn ISL</div>
-        <div class="big-hindi">ISL सीखें</div>
-        <div class="big-sub">Lesson 1 · 5 minutes</div>
+    <!-- TOP BAR -->
+    <header class="home-top">
+      <div class="home-logo">Signify</div>
+      <div class="home-top-right">
+        <span class="streak" id="streak" title="Days in a row you've opened Signify">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.5 2-5.5 1.5 1 2 2.5 2 2.5S12 7 12 3z"/></svg>
+          <span id="streak-text">1 day streak</span>
+        </span>
+        <a href="setup.html" class="home-avatar" id="avatar" aria-label="Your profile">?</a>
       </div>
-      <div class="arrow">➜</div>
-    </a>
+    </header>
 
-   
-    <section class="tiles">
-      <a href="progress.html" class="tile">
-        <span class="tile-emoji">🏆</span>
-        <span class="tile-title">My progress</span>
-        <span class="tile-sub">Level & lessons left</span>
-      </a>
-      <a href="translate.html" class="tile">
-        <span class="tile-emoji">🌏</span>
-        <span class="tile-title">Translator</span>
-        <span class="tile-sub">10 Indian languages</span>
-      </a>
-    </section>
-
-
-
-     <section class="helper">
-      <h2>💬 Ask Signify</h2>
-      <p class="helper-sub">Ask anything about sign language or deaf culture.</p>
-
-      <div id="messages" class="messages">
-        <div class="msg bot">Hi! I'm your Signify helper. Ask me a question 😊</div>
+    <!-- HERO: mascot + greeting, and the chapter ring -->
+    <section class="home-hero">
+      <div class="home-card home-greet">
+        <svg class="home-mascot" viewBox="0 0 120 150" role="img" aria-label="Signify mascot, a waving yellow hand">
+          <defs>
+            <g id="hand-shape">
+              <rect x="31" y="22" width="15" height="54" rx="7.5"/>
+              <rect x="47" y="12" width="15" height="62" rx="7.5"/>
+              <rect x="63" y="18" width="15" height="58" rx="7.5"/>
+              <rect x="79" y="32" width="13" height="44" rx="6.5"/>
+              <rect x="26" y="58" width="16" height="44" rx="8" transform="rotate(-28 34 100)"/>
+              <rect x="28" y="58" width="66" height="66" rx="28"/>
+            </g>
+          </defs>
+          <g class="home-mascot-hand">
+            <rect x="42" y="116" width="40" height="26" rx="8" fill="#8B7CF6" stroke="#28264A" stroke-width="4"/>
+            <use href="#hand-shape" fill="#FFC24B" stroke="#28264A" stroke-width="7"/>
+            <use href="#hand-shape" fill="#FFC24B"/>
+            <path d="M39 70 V60 M55 68 V56 M71 70 V60" stroke="#E0A030" stroke-width="2.5" stroke-linecap="round"/>
+            <ellipse cx="44" cy="102" rx="7" ry="4.5" fill="#FF9FB2" opacity="0.75"/>
+            <ellipse cx="80" cy="102" rx="7" ry="4.5" fill="#FF9FB2" opacity="0.75"/>
+            <path d="M45 92 Q51 84 57 92 M67 92 Q73 84 79 92" fill="none" stroke="#28264A" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M53 100 Q62 115 71 100 Z" fill="#28264A"/>
+          </g>
+        </svg>
+        <div class="home-greet-text">
+          <h1 id="hello">Namaste!</h1>
+          <p>Ready to learn a few signs today?</p>
+          <p class="home-nudge" id="nudge">Let's learn your first sign!</p>
+        </div>
       </div>
 
-      <form id="chat-form" class="chat-form">
-        <input id="chat-input" type="text" placeholder="Type your question..." autocomplete="off">
-        <button type="submit">Send</button>
-      
-      </form>
+      <div class="home-card home-ring-card">
+        <svg class="home-ring" viewBox="0 0 100 100" role="img" id="ring" aria-label="Chapter progress">
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#ECE9F7" stroke-width="12"/>
+          <circle id="ring-fill" cx="50" cy="50" r="40" fill="none" stroke="#8B7CF6" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 251.3" transform="rotate(-90 50 50)"/>
+          <text id="ring-text" x="50" y="57" text-anchor="middle">0/9</text>
+        </svg>
+        <div>
+          <div class="home-eyebrow">Chapter 1</div>
+          <div class="home-ring-title">Stops finished</div>
+          <div class="home-muted" id="ring-sub">9 to go</div>
+        </div>
+      </div>
     </section>
 
-    <script>
-    
+    <!-- CONTINUE: the river in miniature -->
+    <section class="home-journey">
+      <div class="home-journey-top">
+        <div>
+          <div class="home-eyebrow light">Chapter 1 · Everyday words</div>
+          <h2>Learn ISL <span lang="hi">· ISL सीखें</span></h2>
+          <div class="home-journey-sub" id="next-text">Next stop: <strong>Food</strong></div>
+        </div>
+        <a href="setup.html" class="home-go" id="continue">
+          <span id="continue-label">Start</span>
+          <span class="go-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+      <ol class="mini-river" id="mini-river" aria-label="Your stops"></ol>
+    </section>
+
+    <!-- THREE TILES -->
+    <section class="home-tiles">
+
+      <div class="home-card sotd">
+        <div class="sotd-video" id="sotd-video">
+          <span class="sotd-tag">Sign of the day</span>
+          <button type="button" class="sotd-play" id="sotd-play" aria-label="Play the sign of the day">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+          </button>
+        </div>
+        <div class="sotd-word"><span id="sotd-en"></span><span lang="hi" id="sotd-hi"></span></div>
+      </div>
+
+      <a href="progress.html" class="home-card home-tile">
+        <div class="home-tile-head">
+          <span class="home-icon yellow"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M7 6H4a3 3 0 0 0 3 4M17 6h3a3 3 0 0 1-3 4"/></svg></span>
+          <div><div class="home-tile-title">My progress</div><div class="home-muted" id="level">Level 1 · Beginner</div></div>
+        </div>
+        <div class="home-row"><span id="signs-count"><strong>0</strong> of 14 signs</span><span class="home-muted" id="stops-count">0 of 9 stops</span></div>
+        <div class="home-bar"><span id="signs-bar"></span></div>
+        <div class="week" id="week" aria-label="Days you practised this week"></div>
+        <div class="home-muted small">This week</div>
+      </a>
+
+      <a href="translate.html" class="home-card home-tile">
+        <div class="home-tile-head">
+          <span class="home-icon blue"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h9M8.5 3v2M6 5c0 4 3 7 7 8M11 5c0 3-2.5 6-6.5 8"/><path d="M13 21l4-9 4 9M14.5 18h5"/></svg></span>
+          <div><div class="home-tile-title">Translator</div><div class="home-muted">10 Indian languages</div></div>
+        </div>
+        <div class="lang-chips">
+          <span lang="hi">हिन्दी</span><span lang="bn">বাংলা</span><span lang="ta">தமிழ்</span>
+          <span lang="te">తెలుగు</span><span lang="mr">मराठी</span><span class="more">+5 more</span>
+        </div>
+      </a>
+    </section>
+
+    <!-- ASK SIGNIFY + RECENTLY LEARNED -->
+    <div class="home-bottom">
+      <section class="home-card helper">
+        <div class="helper-head">
+          <span class="helper-avatar">
+            <svg viewBox="0 0 120 150" aria-hidden="true">
+              <use href="#hand-shape" fill="#FFC24B" stroke="#28264A" stroke-width="8"/>
+              <use href="#hand-shape" fill="#FFC24B"/>
+              <ellipse cx="51" cy="90" rx="5" ry="6.5" fill="#28264A"/><ellipse cx="73" cy="90" rx="5" ry="6.5" fill="#28264A"/>
+              <path d="M54 101 Q62 110 70 101" fill="none" stroke="#28264A" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <div>
+            <h2>Ask Signify</h2>
+            <p class="helper-sub">Ask anything about sign language or deaf culture.</p>
+          </div>
+        </div>
+
+        <div id="messages" class="messages">
+          <div class="msg bot">Hi! I'm your Signify helper. Ask me a question, or try one of these:</div>
+        </div>
+
+        <div class="ask-chips" id="ask-chips">
+          <button type="button">How do I sign "thank you"?</button>
+          <button type="button">Is ISL the same as ASL?</button>
+          <button type="button">What is deaf culture?</button>
+        </div>
+
+        <form id="chat-form" class="chat-form">
+          <label for="chat-input" class="visually-hidden">Your question</label>
+          <input id="chat-input" type="text" placeholder="Type your question..." autocomplete="off">
+          <button type="submit">Send</button>
+        </form>
+      </section>
+
+      <section class="home-card recent">
+        <div>
+          <h2>Recently learned</h2>
+          <p class="home-muted" id="recent-sub">Tap a sign to watch it again</p>
+        </div>
+        <div class="recent-list" id="recent-list"></div>
+        <a href="setup.html" class="recent-btn" id="recent-btn">Start your first lesson</a>
+      </section>
+    </div>
+
+  </main>
+
+  <script src="signs.js"></script>
+  <script>
+    // ===== HOME PAGE: fill in name, progress, river, sign of the day =====
+
+    // Saved by the lessons and the setup page
+    let progress = 0;   // highest stop finished
+    let profile = null;
+    try { progress = parseInt(localStorage.getItem("signify-progress")) || 0; } catch (e) {}
+    try { profile = JSON.parse(localStorage.getItem("signify-profile")); } catch (e) {}
+
+    // Name + avatar
+    if (profile && profile.name) {
+      document.getElementById("hello").textContent = "Namaste, " + profile.name + "!";
+      document.getElementById("avatar").textContent = profile.name.charAt(0).toUpperCase();
+    }
+
+    // Streak + this week: remember each day the app is opened
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const dayKey = (d) => d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+    let days = [];
+    try { days = JSON.parse(localStorage.getItem("signify-days")) || []; } catch (e) {}
+    if (!days.includes(dayKey(today))) days.push(dayKey(today));
+    days = days.slice(-60);
+    try { localStorage.setItem("signify-days", JSON.stringify(days)); } catch (e) {}
+
+    let streak = 0;
+    for (let d = new Date(today); days.includes(dayKey(d)); d.setDate(d.getDate() - 1)) streak++;
+    document.getElementById("streak-text").textContent = streak + (streak === 1 ? " day streak" : " day streak");
+
+    const week = document.getElementById("week");
+    const monday = new Date(today); monday.setDate(today.getDate() - ((today.getDay() + 6) % 7));
+    ["M", "T", "W", "T", "F", "S", "S"].forEach((letter, i) => {
+      const d = new Date(monday); d.setDate(monday.getDate() + i);
+      const box = document.createElement("span");
+      box.textContent = letter;
+      if (days.includes(dayKey(d))) box.className = "on";
+      if (d.getTime() === today.getTime()) box.classList.add("today");
+      week.appendChild(box);
+    });
+
+    // Signs learned = words in "learn" stops you've finished
+    const learnedKeys = [];
+    Object.keys(lessons).forEach((n) => {
+      if (Number(n) <= progress && lessons[n].type === "learn") learnedKeys.push(...lessons[n].words);
+    });
+    const totalSigns = Object.keys(signs).length;
+    document.getElementById("signs-count").innerHTML = "<strong>" + learnedKeys.length + "</strong> of " + totalSigns + " signs";
+    document.getElementById("signs-bar").style.width = (learnedKeys.length / totalSigns * 100) + "%";
+    document.getElementById("stops-count").textContent = Math.min(progress, stops.length) + " of " + stops.length + " stops";
+    document.getElementById("level").textContent = learnedKeys.length >= 10 ? "Level 2 · Explorer" : "Level 1 · Beginner";
+
+    // Chapter ring
+    const doneStops = Math.min(progress, stops.length);
+    document.getElementById("ring-fill").setAttribute("stroke-dasharray", (doneStops / stops.length * 251.3) + " 251.3");
+    document.getElementById("ring-text").textContent = doneStops + "/" + stops.length;
+    if (doneStops === 0) document.getElementById("ring-fill").style.opacity = 0;
+    document.getElementById("ring").setAttribute("aria-label", doneStops + " of " + stops.length + " stops finished");
+    document.getElementById("ring-sub").textContent = doneStops >= stops.length ? "Chapter complete!" : (stops.length - doneStops) + " to go";
+
+    // Next stop + continue button
+    const next = Math.min(progress + 1, stops.length);
+    document.getElementById("next-text").innerHTML = doneStops >= stops.length
+      ? "You finished the chapter!"
+      : "Next stop: <strong></strong>";
+    if (doneStops < stops.length) document.querySelector("#next-text strong").textContent = stops[next - 1];
+    document.getElementById("nudge").textContent = progress === 0
+      ? "Let's learn your first sign!"
+      : "Next up: " + stops[next - 1] + ". Keep going!";
+
+    const cont = document.getElementById("continue");
+    if (profile) {
+      cont.href = "river.html";
+      document.getElementById("continue-label").textContent = progress === 0 ? "Start" : "Continue";
+    }
+
+    // Mini river: one dot per stop
+    const river = document.getElementById("mini-river");
+    stops.forEach((label, i) => {
+      const n = i + 1;
+      const li = document.createElement("li");
+      li.className = n <= progress ? "done" : n === next ? "now" : "later";
+      if (label === "Quiz") li.classList.add("quiz");
+      if (n === stops.length) li.classList.add("final");
+      li.innerHTML = '<span class="dot"></span><span class="mr-label"></span>';
+      li.querySelector(".mr-label").textContent = label === "Final test" ? "Final" : label;
+      if (n === next && doneStops < stops.length) {
+        li.querySelector(".dot").textContent = n;
+        li.insertAdjacentHTML("afterbegin", '<svg class="mr-boat" viewBox="0 0 40 40" aria-hidden="true"><path d="M21 3 V27 H34 Z" fill="#FFC24B"/><path d="M19 8 V27 H9 Z" fill="#fff" stroke="#6A5AD9" stroke-width="1.6" stroke-linejoin="round"/><path d="M4 28 H36 L31 36 H9 Z" fill="#8B7CF6"/></svg>');
+      }
+      river.appendChild(li);
+    });
+    river.style.setProperty("--done", Math.max(next - 1, 0) / (stops.length - 1));
+
+    // Sign of the day: a different sign each day
+    const allKeys = Object.keys(signs);
+    const dayNumber = Math.floor(today.getTime() / 86400000);
+    const sotd = signs[allKeys[dayNumber % allKeys.length]];
+    document.getElementById("sotd-en").textContent = sotd.en;
+    document.getElementById("sotd-hi").textContent = sotd.hi;
+    document.getElementById("sotd-play").addEventListener("click", () => {
+      const box = document.getElementById("sotd-video");
+      box.innerHTML = '<iframe title="Sign of the day" allow="autoplay; encrypted-media" src="https://www.youtube-nocookie.com/embed/' +
+        sotd.video + "?start=" + sotd.start + "&end=" + sotd.end +
+        '&autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1&controls=0&iv_load_policy=3"></iframe>';
+    });
+
+    // Recently learned: the signs from your latest finished lesson
+    const learnStopsDone = Object.keys(lessons).filter((n) => Number(n) <= progress && lessons[n].type === "learn");
+    const recentList = document.getElementById("recent-list");
+    const recentBtn = document.getElementById("recent-btn");
+    if (learnStopsDone.length) {
+      const lastStop = learnStopsDone[learnStopsDone.length - 1];
+      lessons[lastStop].words.slice(0, 4).forEach((key) => {
+        const a = document.createElement("a");
+        a.href = "lesson.html?stop=" + lastStop;
+        a.innerHTML = '<span class="r-en"></span><span class="r-hi" lang="hi"></span>';
+        a.querySelector(".r-en").textContent = signs[key].emoji + " " + signs[key].en;
+        a.querySelector(".r-hi").textContent = signs[key].hi;
+        recentList.appendChild(a);
+      });
+      recentBtn.href = "lesson.html?stop=" + lastStop;
+      recentBtn.textContent = "Review all " + lessons[lastStop].words.length + " " + stops[lastStop - 1].toLowerCase() + " signs";
+    } else {
+      document.getElementById("recent-sub").textContent = "Your first signs will show up here.";
+      recentList.innerHTML = '<p class="recent-empty">No signs yet. Your first lesson takes about 5 minutes.</p>';
+      if (profile) recentBtn.href = "river.html";
+    }
+  </script>
+
+  <script>
+    // ===== ASK SIGNIFY (your chat code, unchanged) =====
     const WORKER_URL = "https://signify-proxy.anwitaghosh20.workers.dev";
 
-    
     const form = document.getElementById("chat-form");
     const input = document.getElementById("chat-input");
     const messages = document.getElementById("messages");
     const sendButton = form.querySelector("button");
 
-   
     const history = [];
 
     // Adds a chat bubble and returns it
@@ -81,9 +318,8 @@
       return bubble;
     }
 
-    
     form.addEventListener("submit", async function (event) {
-      event.preventDefault();               
+      event.preventDefault();
       const question = input.value.trim();
       if (question === "") return;
 
@@ -91,7 +327,6 @@
       history.push({ role: "user", content: question });
       input.value = "";
 
-      
       const thinking = addMessage("Thinking... 🤔", "bot");
       sendButton.disabled = true;
 
@@ -116,13 +351,15 @@
       sendButton.disabled = false;
       messages.scrollTop = messages.scrollHeight;
     });
+
+    // Question chips: tap one to ask it
+    document.querySelectorAll("#ask-chips button").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        input.value = chip.textContent;
+        document.getElementById("ask-chips").hidden = true;
+        form.requestSubmit();
+      });
+    });
   </script>
-
-     
-
-
-  </main>
 </body>
 </html>
-
-    
