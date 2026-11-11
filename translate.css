@@ -1,0 +1,108 @@
+/* =========================================================
+   TRANSLATOR / SIGN DICTIONARY (translate.html)
+   ========================================================= */
+body.dict-page {
+  min-height: 100vh;
+  font-family: "Hind", "Noto Sans Bengali", "Noto Sans Telugu", "Noto Sans Tamil", "Noto Sans Gujarati",
+    "Noto Sans Kannada", "Noto Sans Oriya", "Noto Sans Malayalam", "Noto Sans Gurmukhi", sans-serif;
+  background:
+    radial-gradient(640px 340px at 90% -8%, #E7E1FF 0%, transparent 70%),
+    radial-gradient(520px 300px at -8% 30%, #DCEEFF 0%, transparent 70%),
+    var(--bg);
+}
+body.dict-page::after {
+  content: "";
+  position: fixed; left: 0; right: 0; bottom: 0; height: 110px;
+  z-index: -1; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 110'%3E%3Cpath d='M0 50 Q60 25 120 50 T240 50 T360 50 T480 50 V110 H0Z' fill='%23E6E0FF'/%3E%3Cpath d='M0 78 Q60 55 120 78 T240 78 T360 78 T480 78 V110 H0Z' fill='%23D7CEFF'/%3E%3C/svg%3E") repeat-x bottom / 480px 110px;
+}
+.dict-page main { max-width: 1080px; padding: 24px 24px 130px; display: flex; flex-direction: column; gap: 20px; }
+.dict-page button { font-family: inherit; cursor: pointer; }
+.dict-page button:focus-visible, .dict-page a:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+.dict-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dict-back {
+  display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px 0 10px;
+  border-radius: 14px; border: 2px solid var(--line); background: var(--card);
+  color: var(--muted); text-decoration: none; font-weight: 600;
+}
+.dict-logo { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 1.6rem; color: var(--green-dark); }
+.dict-title h1 { margin: 0; font-size: 2.6rem; line-height: 1.05; }
+.dict-title p { margin: 4px 0 0; font-size: 1.1rem; color: #4A4766; }
+
+.dict-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted);
+}
+.lang-box { background: var(--card); border: 2px solid var(--line); border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.lang-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.lang-list button {
+  min-height: 44px; padding: 0 16px; border-radius: 99px; font-size: 1.05rem; font-weight: 600;
+  border: 2px solid var(--line); background: var(--card); color: var(--text); box-shadow: 0 3px 0 var(--line);
+  transition: transform 0.1s;
+}
+.lang-list button:active { transform: translateY(2px); }
+.lang-list button[aria-pressed="true"] { border-color: var(--green-dark); background: var(--green); color: #fff; box-shadow: 0 3px 0 var(--green-dark); }
+
+.dict-body { display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-start; }
+.dict-words { flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 14px; }
+.dict-tools { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.topic-tabs { display: flex; gap: 4px; padding: 4px; border-radius: 16px; background: #ECE9F7; }
+.topic-tabs button { min-height: 40px; padding: 0 16px; border: 0; border-radius: 12px; font-weight: 600; font-size: 0.95rem; background: transparent; color: var(--muted); }
+.topic-tabs button[aria-pressed="true"] { background: var(--card); color: var(--text); box-shadow: 0 2px 6px rgba(40, 38, 74, 0.12); }
+.dict-search {
+  flex: 1 1 200px; display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 14px;
+  border-radius: 16px; border: 2px solid var(--line); background: var(--card); color: var(--muted);
+}
+.dict-search:focus-within { border-color: var(--green); }
+.dict-search input { flex: 1; min-width: 0; border: 0; outline: none; font: inherit; font-size: 1rem; background: transparent; color: var(--text); }
+
+.word-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.word-btn {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding: 14px 16px; min-height: 120px;
+  text-align: left; border-radius: 20px; color: var(--text); font: inherit;
+  background: var(--card); border: 2px solid var(--line); box-shadow: 0 4px 0 var(--line);
+  transition: transform 0.1s, border-color 0.15s;
+}
+.word-btn:hover { border-color: var(--green); }
+.word-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--line); }
+.word-btn[aria-pressed="true"] { background: #F1EEFE; border-color: var(--green); box-shadow: 0 4px 0 var(--green); }
+.word-tag { padding: 2px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; background: #F1EEFE; color: #4B3DC4; }
+.word-tag.t0 { background: #FFF1D6; color: #8A4B00; }
+.word-main-text { font-weight: 700; font-size: 1.5rem; line-height: 1.25; }
+.word-en-text { font-size: 0.9rem; color: var(--muted); }
+.no-results { color: var(--muted); padding: 20px 4px; }
+
+.sign-panel {
+  flex: 1 1 340px; min-width: 0; background: var(--card); border: 2px solid var(--line); border-radius: 28px;
+  padding: 14px; display: flex; flex-direction: column; gap: 14px; position: sticky; top: 16px;
+}
+.sign-frame { background: #1A1736; border-radius: 20px; padding: 8px; box-shadow: 0 0 0 5px #E7E1FF; }
+.sign-video { position: relative; aspect-ratio: 16 / 9; border-radius: 14px; overflow: hidden; background: #262249; transition: transform 0.3s; }
+.sign-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none; }
+.sign-frame.mirrored .sign-video { transform: scaleX(-1); }
+.sign-controls { display: flex; justify-content: space-between; gap: 8px; padding: 8px 2px 2px; }
+.sign-panel .speed { padding: 3px; border-radius: 12px; }
+.sign-panel .ctrl { min-height: 36px; padding: 0 11px; }
+.sign-info { padding: 0 8px; display: flex; flex-direction: column; gap: 4px; }
+.sign-word { font-weight: 700; font-size: 2.6rem; line-height: 1.15; }
+.sign-sub { font-size: 1.05rem; color: var(--muted); }
+.sign-sub strong { color: var(--text); }
+.same-sign { display: flex; gap: 10px; align-items: flex-start; margin: 0 8px; padding: 12px 14px; border-radius: 16px; background: #F1EEFE; color: #3F31B0; font-size: 0.95rem; }
+.same-sign svg { flex-shrink: 0; margin-top: 2px; }
+.practise-btn {
+  margin: 0 8px 6px; display: flex; align-items: center; justify-content: space-between; min-height: 56px; padding: 0 10px 0 22px;
+  border-radius: 18px; background: var(--green); color: #fff; text-decoration: none;
+  font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 1.2rem; box-shadow: 0 4px 0 var(--green-dark);
+}
+.practise-btn:hover .go-arrow { transform: translateX(4px); }
+
+@media (max-width: 600px) {
+  .dict-page main { padding: 16px 16px 120px; gap: 16px; }
+  .dict-title h1 { font-size: 2rem; }
+  .lang-list { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; }
+  .lang-list button { flex-shrink: 0; }
+  .sign-panel { position: static; order: -1; }
+  .word-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sign-word { font-size: 2rem; }
+}
