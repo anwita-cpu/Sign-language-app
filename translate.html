@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signify · Sign dictionary</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Hind:wght@400;600&family=Noto+Sans+Bengali:wght@500;700&family=Noto+Sans+Telugu:wght@500;700&family=Noto+Sans+Tamil:wght@500;700&family=Noto+Sans+Gujarati:wght@500;700&family=Noto+Sans+Kannada:wght@500;700&family=Noto+Sans+Oriya:wght@500;700&family=Noto+Sans+Malayalam:wght@500;700&family=Noto+Sans+Gurmukhi:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="translate.css">
+</head>
+<body class="dict-page">
+  <main>
+
+    <!-- TOP BAR -->
+    <header class="dict-top">
+      <a href="main.html" class="dict-back">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+        Home
+      </a>
+      <div class="dict-logo">Signify</div>
+    </header>
+
+    <div class="dict-title">
+      <h1>Sign dictionary</h1>
+      <p>Pick your language, then tap a word to see its sign.</p>
+    </div>
+
+    <!-- LANGUAGE PICKER -->
+    <section class="lang-box">
+      <div class="dict-eyebrow">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3z"/></svg>
+        Your language
+      </div>
+      <div class="lang-list" id="lang-list" role="group" aria-label="Choose your language"></div>
+    </section>
+
+    <div class="dict-body">
+
+      <!-- WORDS -->
+      <section class="dict-words">
+        <div class="dict-tools">
+          <div class="topic-tabs" id="topic-tabs" role="group" aria-label="Topic"></div>
+          <label class="dict-search">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+            <span class="visually-hidden">Search signs</span>
+            <input id="search" type="search" autocomplete="off" placeholder="Search signs…">
+          </label>
+        </div>
+        <div class="word-grid" id="word-grid"></div>
+      </section>
+
+      <!-- THE SIGN -->
+      <aside class="sign-panel" id="sign-panel" aria-live="polite">
+        <div class="sign-frame" id="sign-frame">
+          <div class="sign-video">
+            <iframe id="sign-video" title="Sign video" allow="autoplay; encrypted-media"></iframe>
+          </div>
+          <div class="sign-controls">
+            <div class="speed" role="group" aria-label="Playback speed">
+              <button type="button" class="ctrl" data-speed="0.5" aria-pressed="false">0.5×</button>
+              <button type="button" class="ctrl" data-speed="0.75" aria-pressed="false">0.75×</button>
+              <button type="button" class="ctrl" data-speed="1" aria-pressed="true">1×</button>
+            </div>
+            <button type="button" class="ctrl ctrl-toggle" id="mirror-btn" aria-pressed="false">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18"/><path d="M8 7L3 12l5 5V7z"/><path d="M16 7l5 5-5 5V7z"/></svg>
+              Mirror
+            </button>
+          </div>
+        </div>
+
+        <div class="sign-info">
+          <div class="dict-eyebrow" id="sign-lang">In English</div>
+          <div class="sign-word" id="sign-word"></div>
+          <div class="sign-sub" id="sign-sub"></div>
+        </div>
+
+        <p class="same-sign">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+          <span>The sign is the same in every language. Only the word changes.</span>
+        </p>
+
+        <a href="lesson.html" class="practise-btn" id="practise">
+          Practise in a lesson
+          <span class="go-arrow" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </aside>
+    </div>
+
+    <p class="credit">
+      Sign videos: Indian Sign Language Research and Training Centre (ISLRTC),
+      Department of Empowerment of Persons with Disabilities,
+      Ministry of Social Justice and Empowerment, Government of India.
+    </p>
+  </main>
+
+  <script src="signs.js"></script>
+  <script>
+    // ===== SIGN DICTIONARY =====
+
+    // Topics come from the learn stops in signs.js (Food, Family, ...)
+    const topics = Object.keys(lessons)
+      .filter((n) => lessons[n].type === "learn")
+      .map((n, i) => ({ stop: Number(n), name: stops[n - 1], words: lessons[n].words, index: i }));
+    const topicOf = (key) => topics.find((t) => t.words.includes(key));
+
+    // Remember the chosen language (default: Hindi)
+    let lang = "hi";
+    try { lang = localStorage.getItem("signify-lang") || "hi"; } catch (e) {}
+    if (!languages.some((l) => l.code === lang)) lang = "hi";
+
+    let topic = "all";
+    let current = new URLSearchParams(location.search).get("word");
+    if (!signs[current]) current = Object.keys(signs)[0];
+    let speed = 1;
+
+    const langList = document.getElementById("lang-list");
+    const tabs = document.getElementById("topic-tabs");
+    const grid = document.getElementById("word-grid");
+    const search = document.getElementById("search");
+    const video = document.getElementById("sign-video");
+
+    // Language buttons
+    languages.forEach((l) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = l.name;
+      b.lang = l.code;
+      b.dataset.code = l.code;
+      b.addEventListener("click", () => {
+        lang = l.code;
+        try { localStorage.setItem("signify-lang", lang); } catch (e) {}
+        render();
+      });
+      langList.appendChild(b);
+    });
+
+    // Topic tabs
+    [{ id: "all", name: "All" }, ...topics.map((t) => ({ id: t.name, name: t.name }))].forEach((t) => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.textContent = t.name;
+      b.dataset.topic = t.id;
+      b.addEventListener("click", () => { topic = t.id; renderGrid(); });
+      tabs.appendChild(b);
+    });
+
+    search.addEventListener("input", renderGrid);
+
+    function renderGrid() {
+      tabs.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.topic === topic)));
+      const q = search.value.trim().toLowerCase();
+      grid.innerHTML = "";
+      let shown = 0;
+      Object.keys(signs).forEach((key) => {
+        const t = topicOf(key);
+        if (topic !== "all" && (!t || t.name !== topic)) return;
+        if (q) {
+          const all = [signs[key].en, signs[key].hi, ...Object.values(translations[key] || {})].join(" ").toLowerCase();
+          if (!all.includes(q)) return;
+        }
+        shown++;
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "word-btn";
+        b.setAttribute("aria-pressed", String(key === current));
+        b.innerHTML = '<span class="word-tag"></span><span class="word-main-text"></span><span class="word-en-text"></span>';
+        const tag = b.querySelector(".word-tag");
+        tag.textContent = t ? t.name : "";
+        if (t) tag.classList.add("t" + (t.index % 2));
+        b.querySelector(".word-main-text").textContent = wordIn(key, lang);
+        b.querySelector(".word-main-text").lang = lang;
+        b.querySelector(".word-en-text").textContent = lang === "en" ? signs[key].hi : signs[key].en;
+        b.addEventListener("click", () => {
+          current = key;
+          renderGrid();
+          showSign();
+          if (window.innerWidth <= 600) document.getElementById("sign-panel").scrollIntoView({ behavior: "smooth" });
+        });
+        grid.appendChild(b);
+      });
+      if (!shown) grid.innerHTML = '<p class="no-results">No signs found. Try another word.</p>';
+    }
+
+    function showSign() {
+      const s = signs[current];
+      const L = languages.find((l) => l.code === lang);
+      document.getElementById("sign-lang").textContent = "In " + L.english;
+      const w = document.getElementById("sign-word");
+      w.textContent = wordIn(current, lang);
+      w.lang = lang;
+      const t = topicOf(current);
+      document.getElementById("sign-sub").innerHTML = lang === "en"
+        ? "Hindi: <strong></strong>" + (t ? " · " + t.name : "")
+        : "English: <strong></strong>" + (t ? " · " + t.name : "");
+      document.querySelector("#sign-sub strong").textContent = lang === "en" ? s.hi : s.en;
+      document.getElementById("practise").href = t ? "lesson.html?stop=" + t.stop : "lesson.html";
+
+      video.dataset.start = s.start;
+      video.src = "https://www.youtube-nocookie.com/embed/" + s.video +
+        "?start=" + s.start + "&end=" + s.end +
+        "&autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1&controls=0&disablekb=1&fs=0&iv_load_policy=3&enablejsapi=1";
+    }
+
+    function render() {
+      langList.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.code === lang)));
+      const L = languages.find((l) => l.code === lang);
+      search.placeholder = lang === "en" ? "Search signs…" : "Search in " + L.english + " or English…";
+      renderGrid();
+      showSign();
+    }
+
+    // ===== VIDEO: loop the clip, speed, mirror =====
+    const send = (func, args) => video.contentWindow && video.contentWindow.postMessage(
+      JSON.stringify({ event: "command", func: func, args: args || [] }), "*");
+    video.addEventListener("load", () => {
+      video.contentWindow.postMessage(JSON.stringify({ event: "listening", id: video.id }), "*");
+      setTimeout(() => send("setPlaybackRate", [speed]), 600);
+      setTimeout(() => send("setPlaybackRate", [speed]), 1500);
+    });
+    window.addEventListener("message", (e) => {
+      if (!/youtube/.test(e.origin) || e.source !== video.contentWindow) return;
+      let data;
+      try { data = JSON.parse(e.data); } catch (err) { return; }
+      const state = data.event === "onStateChange" ? data.info : data.info && data.info.playerState;
+      if (state === 0) { send("seekTo", [Number(video.dataset.start), true]); send("playVideo"); }
+    });
+    document.querySelectorAll("[data-speed]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("[data-speed]").forEach((b) => b.setAttribute("aria-pressed", "false"));
+        btn.setAttribute("aria-pressed", "true");
+        speed = Number(btn.dataset.speed);
+        send("setPlaybackRate", [speed]);
+      });
+    });
+    document.getElementById("mirror-btn").addEventListener("click", (e) => {
+      const on = document.getElementById("sign-frame").classList.toggle("mirrored");
+      e.currentTarget.setAttribute("aria-pressed", String(on));
+    });
+
+    render();
+  </script>
+</body>
+</html>
