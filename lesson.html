@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -61,7 +61,6 @@
     </header>
 
     <!-- SCREEN 1: LEARN A SIGN (full video, word visible) -->
-    <!-- SCREEN 1: LEARN A SIGN (full video, word visible) -->
     <section id="learn-screen" class="screen">
       <div class="lesson-layout">
         <div class="lesson-video-col">
@@ -89,6 +88,15 @@
             </button>
             <button id="next-btn" class="btn-3d btn-main" type="button">Got it <span class="go-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
           </div>
+
+          <div class="side-card practice-tips">
+            <p class="word-eyebrow">How to practise</p>
+            <ol class="tip-steps">
+              <li><span>Watch it once at <strong>0.5×</strong></span></li>
+              <li><span>Turn on <strong>Mirror</strong> and copy along</span></li>
+              <li><span>Try it at full speed without looking</span></li>
+            </ol>
+          </div>
         </div>
 
         <div class="lesson-info-col">
@@ -110,58 +118,6 @@
           <div class="side-card stop-words">
             <p class="word-eyebrow">Signs in this stop</p>
             <ol id="stop-list" class="stop-list"></ol>
-          </div>
-
-          <div class="side-card practice-tips">
-            <p class="word-eyebrow">How to practise</p>
-            <ol class="tip-steps">
-              <li><span>Watch it once at <strong>0.5×</strong></span></li>
-              <li><span>Turn on <strong>Mirror</strong> and copy along</span></li>
-              <li><span>Try it at full speed without looking</span></li>
-            </ol>
-          </div>
-
-        </div>
-      </div>
-
-    </section>
-
-        <div class="lesson-info-col">
-          <div class="word-card">
-            <p class="word-eyebrow">This sign means</p>
-            <div class="word-main">
-              <span id="learn-emoji" class="word-emoji" aria-hidden="true"></span>
-              <div>
-                <div id="learn-en" class="word-en"></div>
-                <div id="learn-hi" class="word-hi" lang="hi"></div>
-              </div>
-            </div>
-            <div id="learn-tip" class="memory-tip" hidden>
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z"/></svg>
-              <div><strong>Tip:</strong> <span id="learn-tip-text"></span></div>
-            </div>
-          </div>
-
-          <div class="side-card stop-words">
-            <p class="word-eyebrow">Signs in this stop</p>
-            <ol id="stop-list" class="stop-list"></ol>
-          </div>
-
-          <div class="side-card practice-tips">
-            <p class="word-eyebrow">How to practise</p>
-            <ol class="tip-steps">
-              <li><span>Watch it once at <strong>0.5×</strong></span></li>
-              <li><span>Turn on <strong>Mirror</strong> and copy along</span></li>
-              <li><span>Try it at full speed without looking</span></li>
-            </ol>
-          </div>
-
-          <div class="lesson-actions">
-            <button id="replay-btn" class="btn-3d btn-ghost small-btn" type="button" aria-label="Watch again" title="Watch again">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-              <span class="btn-label">Watch again</span>
-            </button>
-            <button id="next-btn" class="btn-3d btn-main" type="button">Got it <span class="go-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
           </div>
         </div>
       </div>
@@ -232,14 +188,17 @@
       friend:     { en: "Friend",     hi: "दोस्त",  emoji: "🤝", video: PEOPLE, start: 185, end: 191 },
     };
 
-  // ===== 2. WHAT EACH STOP TEACHES (matches the stops on river.html) =====
+    // ===== 2. WHAT EACH STOP TEACHES (matches the stops on river.html) =====
     const lessons = {
       1: { type: "learn", words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables"] },   // Food
       2: { type: "quiz",  words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables"] },   // Food quiz
       3: { type: "learn", words: ["father", "mother", "brother", "sister", "baby", "child", "friend"] }, // Family
       4: { type: "quiz",  words: ["father", "mother", "brother", "sister", "baby", "child", "friend"] }, // Family quiz
-      // 5: Feelings, coming soon
-      6: { type: "quiz",  words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables",
+      // 5: Needs, coming soon
+      // 6: Help, coming soon
+      // 7: Needs + Help quiz, coming soon
+      // 8: Feelings, coming soon
+      9: { type: "quiz",  words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables",
                                   "father", "mother", "brother", "sister", "baby", "child", "friend"] }, // Final test
     };
 
@@ -492,3 +451,4 @@
   </script>
 </body>
 </html>
+
