@@ -168,22 +168,38 @@
 
     <script>
     // ===== 1. YOUR SIGNS =====
+    const FOOD = "SgVLj-CHvZ4";    // ISLRTC: Food related
+    const PEOPLE = "vtFLWKxUX4A";  // ISLRTC: ISL Orientation Course, Part 1
     const signs = {
-      water:      { en: "Water",      hi: "पानी",   emoji: "💧", video: "SgVLj-CHvZ4", start: 40,  end: 49  },
-      milk:       { en: "Milk",       hi: "दूध",    emoji: "🥛", video: "SgVLj-CHvZ4", start: 70,  end: 81  },
-      roti:       { en: "Roti",       hi: "रोटी",   emoji: "🫓", video: "SgVLj-CHvZ4", start: 82,  end: 98  },
-      vegetables: { en: "Vegetables", hi: "सब्ज़ी", emoji: "🥕", video: "SgVLj-CHvZ4", start: 99,  end: 106 },
-      rice:       { en: "Rice",       hi: "चावल",  emoji: "🍚", video: "SgVLj-CHvZ4", start: 127, end: 132 },
-      banana:     { en: "Banana",     hi: "केला",   emoji: "🍌", video: "SgVLj-CHvZ4", start: 143, end: 153 },
-      apple:      { en: "Apple",      hi: "सेब",    emoji: "🍎", video: "SgVLj-CHvZ4", start: 160, end: 166 },
+      // Food
+      water:      { en: "Water",      hi: "पानी",   emoji: "💧", video: FOOD, start: 40,  end: 49  },
+      milk:       { en: "Milk",       hi: "दूध",    emoji: "🥛", video: FOOD, start: 70,  end: 81  },
+      roti:       { en: "Roti",       hi: "रोटी",   emoji: "🫓", video: FOOD, start: 82,  end: 98  },
+      vegetables: { en: "Vegetables", hi: "सब्ज़ी", emoji: "🥕", video: FOOD, start: 99,  end: 106 },
+      rice:       { en: "Rice",       hi: "चावल",  emoji: "🍚", video: FOOD, start: 127, end: 132 },
+      banana:     { en: "Banana",     hi: "केला",   emoji: "🍌", video: FOOD, start: 143, end: 153 },
+      apple:      { en: "Apple",      hi: "सेब",    emoji: "🍎", video: FOOD, start: 160, end: 166 },
+      // Family and people
+      father:     { en: "Father",     hi: "पिता",   emoji: "👨", video: PEOPLE, start: 75,  end: 87  },
+      mother:     { en: "Mother",     hi: "माँ",     emoji: "👩", video: PEOPLE, start: 93,  end: 99  },
+      brother:    { en: "Brother",    hi: "भाई",    emoji: "👦", video: PEOPLE, start: 112, end: 118 },
+      sister:     { en: "Sister",     hi: "बहन",    emoji: "👧", video: PEOPLE, start: 127, end: 133 },
+      baby:       { en: "Baby",       hi: "शिशु",   emoji: "👶", video: PEOPLE, start: 143, end: 149 },
+      child:      { en: "Child",      hi: "बच्चा",  emoji: "🧒", video: PEOPLE, start: 157, end: 160 },
+      friend:     { en: "Friend",     hi: "दोस्त",  emoji: "🤝", video: PEOPLE, start: 185, end: 191 },
     };
 
-    // ===== 2. WHAT EACH STOP TEACHES =====
+    // ===== 2. WHAT EACH STOP TEACHES (matches the stops on river.html) =====
     const lessons = {
-      1: { type: "learn", words: ["water", "milk"] },
-      2: { type: "learn", words: ["roti", "rice"] },
-      3: { type: "quiz",  words: ["water", "milk", "roti", "rice"] },
-      4: { type: "learn", words: ["banana", "apple", "vegetables"] },
+      1: { type: "learn", words: ["water", "milk", "roti", "rice"] },              // Food
+      2: { type: "learn", words: ["banana", "apple", "vegetables"] },              // Fruits & veg
+      3: { type: "quiz",  words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables"] },
+      4: { type: "learn", words: ["father", "mother", "brother", "sister"] },      // Family
+      5: { type: "learn", words: ["baby", "child", "friend"] },                   // Kids & friends
+      6: { type: "quiz",  words: ["father", "mother", "brother", "sister", "baby", "child", "friend"] },
+      // 7: Feelings, coming soon
+      8: { type: "quiz",  words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables",
+                                  "father", "mother", "brother", "sister", "baby", "child", "friend"] }, // Final test
     };
 
     // ===== 3. WHICH STOP ARE WE ON? (from lesson.html?stop=1) =====
@@ -328,8 +344,9 @@
       continueBtn.hidden = true;
       mascotSay("idle", "Which word is this?");
 
-      // The right answer + 3 random wrong ones
-      const wrong = shuffle(Object.keys(signs).filter(k => k !== answerKey)).slice(0, 3);
+      // The right answer + 3 random wrong ones, from the same topic when possible
+      const pool = lesson.words.length >= 4 ? lesson.words : Object.keys(signs);
+      const wrong = shuffle(pool.filter(k => k !== answerKey)).slice(0, 3);
       const choices = shuffle([answerKey, ...wrong]);
 
       optionsBox.innerHTML = "";
@@ -433,4 +450,3 @@
   </script>
 </body>
 </html>
-
