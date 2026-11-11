@@ -16,6 +16,48 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
       </a>
       <div class="progress" role="progressbar" aria-label="Lesson progress"><span id="progress-fill"></span></div>
+      <!-- MASCOT: a friendly waving hand -->
+      <div class="mascot" id="mascot" data-mood="wave">
+        <p class="mascot-bubble" id="mascot-bubble" aria-live="polite">Hi! Let's learn a sign</p>
+        <button type="button" class="mascot-btn" id="mascot-btn" aria-label="Say hi to the mascot">
+          <svg class="mascot-svg" viewBox="0 0 120 150" aria-hidden="true">
+            <defs>
+              <g id="hand-shape">
+                <rect x="31" y="22" width="15" height="54" rx="7.5"/>
+                <rect x="47" y="12" width="15" height="62" rx="7.5"/>
+                <rect x="63" y="18" width="15" height="58" rx="7.5"/>
+                <rect x="79" y="32" width="13" height="44" rx="6.5"/>
+                <rect x="26" y="58" width="16" height="44" rx="8" transform="rotate(-28 34 100)"/>
+                <rect x="28" y="58" width="66" height="66" rx="28"/>
+              </g>
+            </defs>
+            <ellipse class="mascot-shadow" cx="62" cy="146" rx="26" ry="4"/>
+            <g class="mascot-hand">
+              <rect x="42" y="116" width="40" height="26" rx="8" fill="#8B7CF6" stroke="#28264A" stroke-width="4"/>
+              <path d="M44 128 H80" stroke="#6A5AD9" stroke-width="4"/>
+              <use href="#hand-shape" fill="#FFC24B" stroke="#28264A" stroke-width="7"/>
+              <use href="#hand-shape" fill="#FFC24B"/>
+              <path d="M39 70 V60 M55 68 V56 M71 70 V60" stroke="#E0A030" stroke-width="2.5" stroke-linecap="round"/>
+              <g class="face">
+                <ellipse cx="44" cy="102" rx="7" ry="4.5" fill="#FF9FB2" opacity="0.75"/>
+                <ellipse cx="80" cy="102" rx="7" ry="4.5" fill="#FF9FB2" opacity="0.75"/>
+                <g class="eyes-open">
+                  <ellipse cx="51" cy="90" rx="4.6" ry="6" fill="#28264A"/>
+                  <ellipse cx="73" cy="90" rx="4.6" ry="6" fill="#28264A"/>
+                  <circle cx="52.6" cy="87.6" r="1.7" fill="#fff"/>
+                  <circle cx="74.6" cy="87.6" r="1.7" fill="#fff"/>
+                </g>
+                <g class="eyes-happy" fill="none" stroke="#28264A" stroke-width="3.5" stroke-linecap="round">
+                  <path d="M45 92 Q51 84 57 92"/><path d="M67 92 Q73 84 79 92"/>
+                </g>
+                <path class="mouth-smile" d="M54 101 Q62 110 70 101" fill="none" stroke="#28264A" stroke-width="3.5" stroke-linecap="round"/>
+                <path class="mouth-big" d="M53 100 Q62 115 71 100 Z" fill="#28264A"/>
+                <path class="mouth-oops" d="M55 106 Q62 100 69 106" fill="none" stroke="#28264A" stroke-width="3.5" stroke-linecap="round"/>
+              </g>
+            </g>
+          </svg>
+        </button>
+      </div>
     </header>
 
     <!-- SCREEN 1: LEARN A SIGN (full video, word visible) -->
@@ -56,16 +98,31 @@
               <div><strong>Tip:</strong> <span id="learn-tip-text"></span></div>
             </div>
           </div>
+
+          <div class="side-card stop-words">
+            <p class="word-eyebrow">Signs in this stop</p>
+            <ol id="stop-list" class="stop-list"></ol>
+          </div>
+
+          <div class="side-card practice-tips">
+            <p class="word-eyebrow">How to practise</p>
+            <ol class="tip-steps">
+              <li><span>Watch it once at <strong>0.5×</strong></span></li>
+              <li><span>Turn on <strong>Mirror</strong> and copy along</span></li>
+              <li><span>Try it at full speed without looking</span></li>
+            </ol>
+          </div>
+
+          <div class="lesson-actions">
+            <button id="replay-btn" class="btn-3d btn-ghost small-btn" type="button" aria-label="Watch again" title="Watch again">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
+              <span class="btn-label">Watch again</span>
+            </button>
+            <button id="next-btn" class="btn-3d btn-main" type="button">Got it <span class="go-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+          </div>
         </div>
       </div>
 
-      <div class="lesson-actions">
-        <button id="replay-btn" class="btn-3d btn-ghost small-btn" type="button">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg>
-          <span class="btn-label">Watch again</span>
-        </button>
-        <button id="next-btn" class="btn-3d btn-main" type="button">Got it →</button>
-      </div>
     </section>
 
     <!-- SCREEN 2: PRACTICE (cropped video, signer only) -->
@@ -86,7 +143,7 @@
         </div>
       </div>
       <div class="lesson-actions">
-        <button id="continue-btn" class="btn-3d btn-main" type="button" hidden>Continue →</button>
+        <button id="continue-btn" class="btn-3d btn-main" type="button" hidden>Continue <span class="go-arrow" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
       </div>
     </section>
 
@@ -141,6 +198,23 @@
     const optionsBox   = document.getElementById("options");
     const feedback     = document.getElementById("feedback");
     const continueBtn  = document.getElementById("continue-btn");
+
+    // ===== MASCOT: change its mood and what it says =====
+    const mascot = document.getElementById("mascot");
+    const bubble = document.getElementById("mascot-bubble");
+    let moodTimer, bubbleTimer;
+    function mascotSay(mood, text) {
+      clearTimeout(moodTimer); clearTimeout(bubbleTimer);
+      mascot.dataset.mood = mood;
+      bubble.textContent = text;
+      bubble.classList.remove("show"); void bubble.offsetWidth; bubble.classList.add("show");
+      moodTimer = setTimeout(() => { mascot.dataset.mood = "idle"; }, 2600);
+      bubbleTimer = setTimeout(() => bubble.classList.remove("show"), 4200);
+    }
+    const cheers = ["Hi there!", "You're doing great!", "Keep going!", "High five!"];
+    document.getElementById("mascot-btn").addEventListener("click", () => {
+      mascotSay("wave", cheers[Math.floor(Math.random() * cheers.length)]);
+    });
 
     // Show one screen, hide the others
     function show(screen) {
@@ -213,6 +287,27 @@
       // Optional: add  tip: "..."  to a sign above to show a memory tip
       document.getElementById("learn-tip").hidden = !currentLearn.tip;
       document.getElementById("learn-tip-text").textContent = currentLearn.tip || "";
+      renderStopList();
+      mascotSay("wave", "Watch closely, then copy the sign!");
+      // little bounce each time a new sign appears
+      const card = document.querySelector("#learn-screen .word-card");
+      card.classList.remove("pop"); void card.offsetWidth; card.classList.add("pop");
+    }
+
+    // Shows every sign in this stop: done, now, or coming up
+    function renderStopList() {
+      const list = document.getElementById("stop-list");
+      const nowIndex = lesson.words.length - learnQueue.length - 1;
+      list.innerHTML = "";
+      lesson.words.forEach((key, i) => {
+        const li = document.createElement("li");
+        li.className = i < nowIndex ? "done" : i === nowIndex ? "now" : "next";
+        li.innerHTML = '<span class="sl-emoji" aria-hidden="true"></span><span class="sl-en"></span><span class="sl-state"></span>';
+        li.querySelector(".sl-emoji").textContent = signs[key].emoji;
+        li.querySelector(".sl-en").textContent = signs[key].en;
+        li.querySelector(".sl-state").textContent = i < nowIndex ? "Learned" : i === nowIndex ? "Now" : "Next";
+        list.appendChild(li);
+      });
     }
 
     document.getElementById("replay-btn").addEventListener("click", () => playSign("learn-video", currentLearn));
@@ -231,6 +326,7 @@
       playSign("quiz-video", answer);
       feedback.textContent = "";
       continueBtn.hidden = true;
+      mascotSay("idle", "Which word is this?");
 
       // The right answer + 3 random wrong ones
       const wrong = shuffle(Object.keys(signs).filter(k => k !== answerKey)).slice(0, 3);
@@ -257,6 +353,7 @@
       if (key === answerKey) {
         btn.classList.add("right");
         feedback.textContent = "✅ Correct!";
+        mascotSay("happy", "Yay! You got it!");
         stepsDone++;
       } else {
         btn.classList.add("wrong");
@@ -265,6 +362,7 @@
           if (b.querySelector(".opt-en").textContent === signs[answerKey].en) b.classList.add("right");
         });
         feedback.textContent = "Not quite. It's " + signs[answerKey].en + " 💜";
+        mascotSay("oops", "So close! We'll try it again");
         // Ask this one again later
         quizQueue.push(answerKey);
         totalSteps++;
@@ -279,6 +377,7 @@
     function finish() {
       show(finishScreen);
       progressFill.style.width = "100%";
+      mascotSay("happy", "You did it!");
 
       // Save progress so the boat sails on
       try {
@@ -334,3 +433,4 @@
   </script>
 </body>
 </html>
+
