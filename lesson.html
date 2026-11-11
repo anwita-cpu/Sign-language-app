@@ -189,16 +189,14 @@
       friend:     { en: "Friend",     hi: "दोस्त",  emoji: "🤝", video: PEOPLE, start: 185, end: 191 },
     };
 
-    // ===== 2. WHAT EACH STOP TEACHES (matches the stops on river.html) =====
+  // ===== 2. WHAT EACH STOP TEACHES (matches the stops on river.html) =====
     const lessons = {
-      1: { type: "learn", words: ["water", "milk", "roti", "rice"] },              // Food
-      2: { type: "learn", words: ["banana", "apple", "vegetables"] },              // Fruits & veg
-      3: { type: "quiz",  words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables"] },
-      4: { type: "learn", words: ["father", "mother", "brother", "sister"] },      // Family
-      5: { type: "learn", words: ["baby", "child", "friend"] },                   // Kids & friends
-      6: { type: "quiz",  words: ["father", "mother", "brother", "sister", "baby", "child", "friend"] },
-      // 7: Feelings, coming soon
-      8: { type: "quiz",  words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables",
+      1: { type: "learn", words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables"] },   // Food
+      2: { type: "quiz",  words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables"] },   // Food quiz
+      3: { type: "learn", words: ["father", "mother", "brother", "sister", "baby", "child", "friend"] }, // Family
+      4: { type: "quiz",  words: ["father", "mother", "brother", "sister", "baby", "child", "friend"] }, // Family quiz
+      // 5: Feelings, coming soon
+      6: { type: "quiz",  words: ["water", "milk", "roti", "rice", "banana", "apple", "vegetables",
                                   "father", "mother", "brother", "sister", "baby", "child", "friend"] }, // Final test
     };
 
@@ -409,7 +407,8 @@
         if (profile && profile.name) name = profile.name;
       } catch (e) {}
 
-      const learned = lesson.type === "learn" ? lesson.words.map(w => signs[w].en).join(" and ") : null;
+      const names = lesson.words.map(w => signs[w].en);
+      const learned = lesson.type === "learn" ? names.slice(0, -1).join(", ") + " and " + names[names.length - 1] : null;
       document.getElementById("finish-text").textContent = learned
         ? "You learned " + learned + "! Try signing them with " + name + " today. 🌙"
         : "Great job, you remembered all your signs! 🌟";
