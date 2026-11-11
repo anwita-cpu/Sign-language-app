@@ -709,3 +709,9 @@ body.lesson-page::after {
 @media (prefers-reduced-motion: reduce) {
   .mascot-hand, .eyes-open, .mascot-shadow { animation: none !important; }
 }
+
+/* Buttons now sit under the video, on the right */
+#learn-screen .lesson-video-col .lesson-actions { margin-top: 4px; justify-content: flex-end; }
+#learn-screen .lesson-video-col .btn-main { margin-left: 0; }
+@media (max-width: 600px) {
+  #learn-screen .lesson-actions { order: 0; }
