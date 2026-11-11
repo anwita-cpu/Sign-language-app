@@ -410,6 +410,35 @@ body {
 .memory-tip[hidden] { display: none; }
 .memory-tip svg { flex-shrink: 0; margin-top: 2px; }
 
+/* Right column on the learn screen */
+#learn-screen .lesson-info-col { display: flex; flex-direction: column; gap: 16px; }
+#learn-screen .lesson-actions { flex-wrap: nowrap; }
+#learn-screen .btn-ghost { flex: 0 0 auto; padding: 0 18px; }
+#learn-screen .btn-main { flex: 1 1 auto; white-space: nowrap; }
+.side-card {
+  background: var(--card); border: 2px solid var(--line); border-radius: 24px;
+  padding: 18px 20px; display: flex; flex-direction: column; gap: 12px;
+}
+.stop-list, .tip-steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.stop-list li {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 12px; border-radius: 14px; background: var(--bg);
+}
+.stop-list li.now { background: #F1EEFE; box-shadow: inset 0 0 0 2px var(--green); }
+.stop-list li.done .sl-en { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 2px; }
+.sl-emoji { font-size: 1.4rem; }
+.sl-en { flex: 1; font-weight: 600; }
+.sl-state { font-size: 0.8rem; font-weight: 600; color: var(--muted); }
+.stop-list li.now .sl-state { color: var(--green-dark); }
+.stop-list li.done .sl-state { color: #23804F; }
+.tip-steps { counter-reset: tip; }
+.tip-steps li { display: flex; align-items: center; gap: 12px; counter-increment: tip; }
+.tip-steps li::before {
+  content: counter(tip); width: 28px; height: 28px; flex-shrink: 0;
+  border-radius: 9px; background: #FFF1D6; color: #8A4B00; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+
 /* Quiz */
 .quiz-q { font-family: "Baloo 2", sans-serif; font-size: 1.6rem; margin: 0 0 14px; line-height: 1.2; }
 .options { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -487,6 +516,10 @@ body {
   .btn-label { display: none; }
   #replay-btn { width: 60px; padding: 0; flex-shrink: 0; }
   .option { min-height: 96px; padding: 12px; }
+  /* phones: buttons right under the word, skip the practice card */
+  #learn-screen .lesson-actions { order: -1; }
+  #learn-screen .word-card { order: -2; }
+  .practice-tips { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -497,3 +530,182 @@ body {
 /* Kept from your version */
 [hidden] { display: none !important; }
 .video-box iframe { pointer-events: none; }
+
+
+/* =========================================================
+   FUN LAYER: river theme + motion for the lesson page
+   ========================================================= */
+
+/* Soft sky glow + waves rolling along the bottom */
+body.lesson-page {
+  background:
+    radial-gradient(620px 320px at 88% -6%, #E7E1FF 0%, transparent 70%),
+    radial-gradient(520px 280px at -6% 34%, #DCEEFF 0%, transparent 70%),
+    var(--bg);
+  min-height: 100vh;
+}
+body.lesson-page::after {
+  content: "";
+  position: fixed; left: 0; right: 0; bottom: 0; height: 110px;
+  z-index: -1; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 110'%3E%3Cpath d='M0 50 Q60 25 120 50 T240 50 T360 50 T480 50 V110 H0Z' fill='%23E6E0FF'/%3E%3Cpath d='M0 78 Q60 55 120 78 T240 78 T360 78 T480 78 V110 H0Z' fill='%23D7CEFF'/%3E%3C/svg%3E") repeat-x bottom / 480px 110px;
+  animation: waves-roll 22s linear infinite;
+}
+@keyframes waves-roll { to { background-position-x: 480px; } }
+.lesson-page main { padding-bottom: 120px; }
+
+/* Progress bar: striped water with a boat sailing on it */
+.lesson-page .progress { overflow: visible; height: 16px; }
+.lesson-page #progress-fill {
+  position: relative; min-width: 16px;
+  background: repeating-linear-gradient(-45deg, var(--green) 0 10px, #A094F9 10px 20px);
+  background-size: 28.28px 28.28px;
+  animation: stripes-flow 1.2s linear infinite;
+}
+@keyframes stripes-flow { to { background-position: 28.28px 0; } }
+.lesson-page #progress-fill::after {
+  content: "";
+  position: absolute; right: -18px; top: -24px; width: 38px; height: 38px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M21 3 V27 H34 Z' fill='%23FFC24B'/%3E%3Cpath d='M19 8 V27 H9 Z' fill='%23FFFFFF' stroke='%236A5AD9' stroke-width='1.6' stroke-linejoin='round'/%3E%3Cpath d='M4 28 H36 L31 36 H9 Z' fill='%236A5AD9'/%3E%3C/svg%3E") center / contain no-repeat;
+  transform-origin: 50% 90%;
+  animation: boat-rock 2.6s ease-in-out infinite;
+}
+@keyframes boat-rock { 0%, 100% { rotate: -6deg; } 50% { rotate: 6deg; } }
+
+/* "New sign" pill gets a sparkle and a little wiggle */
+.pill-new::before { content: "✦ "; }
+.pill-new { animation: pill-wiggle 4s ease-in-out infinite; transform-origin: left center; }
+@keyframes pill-wiggle { 0%, 88%, 100% { rotate: 0deg; } 92% { rotate: -4deg; } 96% { rotate: 3deg; } }
+
+/* Video frame: soft glowing ring */
+.lesson-page .video-frame {
+  box-shadow: 0 0 0 6px #E7E1FF, 0 26px 50px -22px rgba(60, 40, 160, 0.5);
+}
+
+/* Word card: corner bubble, pop-in, bobbing emoji */
+.lesson-page .word-card {
+  background:
+    radial-gradient(circle at 100% 0, #F1EEFE 0 92px, transparent 93px),
+    var(--card);
+}
+.word-card.pop { animation: card-pop 0.5s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes card-pop { from { transform: scale(0.93); opacity: 0.3; } }
+.lesson-page .word-emoji { animation: emoji-bob 3.2s ease-in-out infinite; }
+@keyframes emoji-bob { 0%, 100% { translate: 0 0; rotate: -3deg; } 50% { translate: 0 -5px; rotate: 3deg; } }
+
+/* Side cards lift slightly on hover */
+.side-card { transition: transform 0.2s, box-shadow 0.2s; }
+.side-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -16px rgba(60, 40, 160, 0.35); }
+
+/* Compact "Got it" / "Continue": sized to its text, arrow in a bubble */
+.lesson-actions { justify-content: space-between; align-items: center; }
+#learn-screen .btn-main,
+#quiz-screen .btn-main {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 0 10px 0 28px;
+  gap: 14px;
+  white-space: nowrap;
+}
+.go-arrow {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; transition: transform 0.2s;
+}
+.btn-main:hover .go-arrow { transform: translateX(4px); }
+
+/* Watch again: a round-cornered icon button beside Got it */
+#replay-btn { width: 60px; padding: 0; flex: 0 0 auto; }
+#replay-btn .btn-label { display: none; }
+
+/* Quiz: a happy pop on the right answer */
+.option.right { animation: right-pop 0.45s cubic-bezier(.3, 1.6, .5, 1); }
+@keyframes right-pop { 40% { transform: scale(1.06); } }
+
+@media (prefers-reduced-motion: reduce) {
+  body.lesson-page::after, .lesson-page #progress-fill, .lesson-page #progress-fill::after,
+  .pill-new, .word-card.pop, .lesson-page .word-emoji, .option.right { animation: none; }
+}
+
+
+/* =========================================================
+   MASCOT: the waving hand in the corner
+   ========================================================= */
+.mascot {
+  position: fixed; left: 24px; bottom: 14px; z-index: 5;
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.mascot-btn {
+  width: 110px; height: 138px; padding: 0;
+  border: 0; background: none; cursor: pointer;
+}
+.mascot-btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 4px; border-radius: 20px; }
+.mascot-svg { width: 100%; height: 100%; overflow: visible; }
+.mascot-shadow { fill: rgba(40, 38, 74, 0.18); transform-box: fill-box; transform-origin: center; }
+
+.mascot-hand { transform-box: fill-box; transform-origin: 50% 100%; animation: hand-idle 3s ease-in-out infinite; }
+@keyframes hand-idle { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-4px) rotate(2deg); } }
+
+.mascot[data-mood="wave"] .mascot-hand { animation: hand-wave 0.9s ease-in-out 3; }
+@keyframes hand-wave { 0%, 100% { transform: rotate(-4deg); } 30% { transform: rotate(-16deg); } 70% { transform: rotate(14deg); } }
+
+.mascot[data-mood="happy"] .mascot-hand { animation: hand-jump 0.55s cubic-bezier(.3, 1.4, .5, 1) 3; }
+.mascot[data-mood="happy"] .mascot-shadow { animation: shadow-squeeze 0.55s ease 3; }
+@keyframes hand-jump {
+  0%, 100% { transform: translateY(0) scale(1, 1); }
+  15% { transform: translateY(0) scale(1.08, 0.9); }
+  50% { transform: translateY(-22px) scale(0.95, 1.06) rotate(6deg); }
+}
+@keyframes shadow-squeeze { 50% { transform: scale(0.6); opacity: 0.5; } }
+
+.mascot[data-mood="oops"] .mascot-hand { animation: hand-oops 1.3s ease-in-out 2; }
+@keyframes hand-oops { 0%, 100% { transform: rotate(0deg); } 30% { transform: rotate(-12deg) translateY(4px); } 60% { transform: rotate(-8deg) translateY(4px); } }
+
+/* Blink */
+.eyes-open { transform-box: fill-box; transform-origin: center; animation: blink 4.5s infinite; }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
+
+/* Faces for each mood */
+.eyes-happy, .mouth-big, .mouth-oops { display: none; }
+.mascot[data-mood="happy"] .eyes-open, .mascot[data-mood="happy"] .mouth-smile { display: none; }
+.mascot[data-mood="happy"] .eyes-happy, .mascot[data-mood="happy"] .mouth-big { display: inline; }
+.mascot[data-mood="wave"] .mouth-smile { display: none; }
+.mascot[data-mood="wave"] .mouth-big { display: inline; }
+.mascot[data-mood="oops"] .mouth-smile { display: none; }
+.mascot[data-mood="oops"] .mouth-oops { display: inline; }
+
+/* Speech bubble */
+.mascot-bubble {
+  position: relative; margin: 0 0 6px 34px; max-width: 200px;
+  padding: 10px 14px; border-radius: 18px;
+  background: var(--card); border: 2px solid var(--line);
+  box-shadow: 0 8px 20px -12px rgba(60, 40, 160, 0.4);
+  font-weight: 600; font-size: 0.95rem; color: var(--text); line-height: 1.3;
+  opacity: 0; transform: translateY(8px) scale(0.9); transform-origin: 20% 100%;
+  transition: opacity 0.25s, transform 0.25s cubic-bezier(.3, 1.5, .5, 1);
+  pointer-events: none;
+}
+.mascot-bubble::after {
+  content: ""; position: absolute; left: 22px; bottom: -9px;
+  width: 14px; height: 14px; background: var(--card);
+  border-right: 2px solid var(--line); border-bottom: 2px solid var(--line);
+  transform: rotate(45deg);
+}
+.mascot-bubble.show { opacity: 1; transform: none; }
+
+/* Phones: a small mascot in the top bar, no bubble */
+@media (max-width: 600px) {
+  .mascot { position: static; flex-shrink: 0; }
+  .mascot-btn { width: 40px; height: 50px; }
+  .mascot-bubble, .mascot-shadow { display: none; }
+}
+/* Medium screens: keep it clear of the content */
+@media (min-width: 601px) and (max-width: 1360px) {
+  .mascot-btn { width: 84px; height: 106px; }
+  .mascot { left: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mascot-hand, .eyes-open, .mascot-shadow { animation: none !important; }
+}
