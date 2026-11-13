@@ -6,68 +6,240 @@
   <title>Signify · Setup</title>
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Hind:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="main.css">
+  <script src="i18n.js"></script>
+
+  <style>
+    /* ===== SETUP PAGE: all its styles live here ===== */
+    body.setup-page {
+      margin: 0;
+      min-height: 100vh;
+      color: #28264A;
+      font-family: "Hind", sans-serif;
+      background:
+        radial-gradient(circle at 10% 8%, #FFE3EC 0, transparent 32%),
+        radial-gradient(circle at 92% 18%, #DDF5EE 0, transparent 30%),
+        radial-gradient(circle at 80% 95%, #FFF1CC 0, transparent 35%),
+        #F3F0FF;
+    }
+    .setup-wrap { max-width: 640px; margin: 0 auto; padding: 16px 16px 48px; }
+
+    .setup-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+
+    /* Hero */
+    .setup-hero { text-align: center; margin: 18px 0 22px; }
+    .setup-wave {
+      width: 84px; height: 84px; margin: 0 auto 10px; border-radius: 50%;
+      display: grid; place-items: center; font-size: 2.6rem;
+      background: #fff; box-shadow: 0 6px 0 #DCD5FF, 0 18px 30px -12px rgba(139,124,246,.5);
+      animation: bob 2.4s ease-in-out infinite;
+    }
+    .setup-wave span { display: inline-block; animation: wave 2.4s ease-in-out infinite; transform-origin: 70% 80%; }
+    @keyframes bob  { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+    @keyframes wave { 0%,60%,100% { transform: rotate(0) } 10%,30% { transform: rotate(16deg) } 20%,40% { transform: rotate(-8deg) } }
+    .setup-hero h1 { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: clamp(1.8rem, 6vw, 2.4rem); line-height: 1.15; margin: 0; }
+    .setup-hero p { margin: 4px 0 0; color: #6A6989; font-size: 1.05rem; }
+
+    /* Progress: 3 little segments that fill as you answer */
+    .setup-steps { display: flex; gap: 6px; justify-content: center; margin-top: 14px; }
+    .setup-steps i { width: 44px; height: 8px; border-radius: 99px; background: #DCD5FF; transition: background .3s, transform .3s; }
+    .setup-steps i.on { background: #8B7CF6; transform: scaleY(1.2); }
+
+    /* Question cards */
+    .q-card {
+      border: 0; margin: 0 0 16px; padding: 20px;
+      background: #fff; border-radius: 28px;
+      box-shadow: 0 5px 0 #E4DEFF, 0 20px 40px -24px rgba(40,38,74,.35);
+    }
+    .q-card legend { display: contents; }
+    .q-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+    .q-num {
+      flex-shrink: 0; width: 38px; height: 38px; border-radius: 12px;
+      display: grid; place-items: center; color: #fff;
+      font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 1.2rem;
+    }
+    .q1 .q-num { background: #8B7CF6; box-shadow: 0 3px 0 #6A5AD9; }
+    .q2 .q-num { background: #FF7A93; box-shadow: 0 3px 0 #E0566F; }
+    .q3 .q-num { background: #2EC4A0; box-shadow: 0 3px 0 #1E9E80; }
+    .q-title { font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 1.25rem; line-height: 1.2; }
+    .q-optional { font-family: "Hind", sans-serif; font-weight: 400; font-size: .95rem; color: #6A6989; }
+
+    /* Tap tiles (the radio buttons) */
+    .tiles { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .tiles.goals { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .tile {
+      position: relative; cursor: pointer; user-select: none;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+      min-height: 96px; padding: 12px 8px; text-align: center;
+      border: 2px solid #E4E8F4; border-radius: 20px; background: #FAFBFF;
+      box-shadow: 0 4px 0 #E4E8F4;
+      font-weight: 600; font-size: 1rem; line-height: 1.25;
+      transition: transform .12s, border-color .2s, background .2s, box-shadow .2s;
+    }
+    .tile:hover { transform: translateY(-2px); border-color: #C9BFFF; }
+    .tile:active { transform: translateY(2px); box-shadow: 0 1px 0 #E4E8F4; }
+    .tile input { position: absolute; opacity: 0; pointer-events: none; }
+    .tile .emoji { font-size: 2rem; line-height: 1; transition: transform .25s; }
+    .tile:has(input:checked) {
+      background: #F1EEFF; border-color: #8B7CF6; box-shadow: 0 4px 0 #8B7CF6;
+    }
+    .tile:has(input:checked) .emoji { transform: scale(1.2) rotate(-6deg); }
+    .tile:has(input:checked)::after {
+      content: "✓"; position: absolute; top: 8px; right: 10px;
+      width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center;
+      background: #8B7CF6; color: #fff; font-size: .8rem; font-weight: 800;
+    }
+    .tile:has(input:focus-visible) { outline: 3px solid #FFC24B; outline-offset: 3px; }
+    .goals .tile:nth-child(1) .emoji { font-size: 1.6rem; }
+    .goals .tile:nth-child(3) .emoji { font-size: 2.4rem; }
+
+    /* Name box */
+    .name-input {
+      width: 100%; box-sizing: border-box; min-height: 56px; padding: 0 18px;
+      border: 2px solid #E4E8F4; border-radius: 18px; background: #FAFBFF;
+      font: inherit; font-size: 1.1rem; color: #28264A;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .name-input:focus { outline: none; border-color: #FF7A93; box-shadow: 0 0 0 4px #FFE3EC; background: #fff; }
+
+    /* Start button */
+    .start-btn {
+      width: 100%; min-height: 62px; margin-top: 6px; border: 0; border-radius: 22px; cursor: pointer;
+      background: #8B7CF6; color: #fff; box-shadow: 0 6px 0 #6A5AD9;
+      font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 1.3rem;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: transform .1s, box-shadow .1s, opacity .2s;
+      opacity: .55;
+    }
+    .start-btn.ready { opacity: 1; animation: pop .5s ease; }
+    .start-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #6A5AD9; }
+    .start-btn:focus-visible { outline: 3px solid #FFC24B; outline-offset: 3px; }
+    @keyframes pop { 50% { transform: scale(1.04) } }
+
+    @media (max-width: 420px) {
+      .q-card { padding: 16px; border-radius: 24px; }
+      .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tiles .tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
+      .tiles.goals { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .tiles.goals .tile:last-child { grid-column: auto; }
+      .goals .tile { min-height: 88px; font-size: .9rem; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .setup-wave, .setup-wave span, .start-btn.ready { animation: none; }
+    }
+  </style>
 </head>
-<body>
-  <main>
+<body class="setup-page">
+  <main class="setup-wrap">
 
-    <a href="main.html" class="back">← Back</a>
+    <div class="setup-top">
+      <a href="main.html" class="back">← <span data-i18n="home">Home</span></a>
+      <span data-lang-slot></span>
+    </div>
 
-    <h1>Let's get you set up 💜</h1>
-    <p class="setup-sub">Just 3 quick questions before your first lesson.</p>
+    <header class="setup-hero">
+      <div class="setup-wave" aria-hidden="true"><span>👋</span></div>
+      <h1 data-i18n="s_title">Let's get you set up</h1>
+      <p data-i18n="s_sub">Just 3 quick questions before your first lesson.</p>
+      <div class="setup-steps" aria-hidden="true"><i></i><i></i><i></i></div>
+    </header>
 
-    <form id="setup-form" class="setup">
+    <form id="setup-form">
 
       <!-- QUESTION 1 -->
-      <fieldset>
-        <legend>1. Who are you learning for?</legend>
-        <label class="choice"><input type="radio" name="who" value="child" required> 👨‍👩‍👧 My child</label>
-        <label class="choice"><input type="radio" name="who" value="sibling"> 👧 My brother or sister</label>
-        <label class="choice"><input type="radio" name="who" value="student"> 🧑‍🏫 My student</label>
-        <label class="choice"><input type="radio" name="who" value="friend"> 🤝 A friend</label>
-         <label class="choice"><input type="radio" name="who" value="fun"> ✨ Just for fun</label>
+      <fieldset class="q-card q1">
+        <legend><span class="q-head"><span class="q-num">1</span><span class="q-title" data-i18n="s_q1">Who are you learning for?</span></span></legend>
+        <div class="tiles">
+          <label class="tile"><input type="radio" name="who" value="child" required><span class="emoji">👨‍👩‍👧</span><span data-i18n="s_child">My child</span></label>
+          <label class="tile"><input type="radio" name="who" value="sibling"><span class="emoji">👧</span><span data-i18n="s_sibling">My brother or sister</span></label>
+          <label class="tile"><input type="radio" name="who" value="student"><span class="emoji">🧑‍🏫</span><span data-i18n="s_student">My student</span></label>
+          <label class="tile"><input type="radio" name="who" value="friend"><span class="emoji">🤝</span><span data-i18n="s_friend">A friend</span></label>
+          <label class="tile"><input type="radio" name="who" value="fun"><span class="emoji">✨</span><span data-i18n="s_fun">Just for fun</span></label>
+        </div>
       </fieldset>
 
       <!-- QUESTION 2 -->
-      <fieldset>
-      <legend>2. Who will you sign with? <span class="optional">(optional)</span></legend>
-        <input type="text" id="their-name" class="text-input" placeholder="e.g. Riya">
+      <fieldset class="q-card q2">
+        <legend><span class="q-head"><span class="q-num">2</span><span class="q-title"><span data-i18n="s_q2">Who will you sign with?</span> <span class="q-optional" data-i18n="s_optional">(optional)</span></span></span></legend>
+        <input type="text" id="their-name" class="name-input" data-i18n-ph="s_name_ph" placeholder="e.g. Riya" autocomplete="off">
       </fieldset>
 
       <!-- QUESTION 3 -->
-      <fieldset>
-        <legend>3. Daily goal</legend>
-        <label class="choice"><input type="radio" name="goal" value="5" required> 🌱 5 minutes a day</label>
-        <label class="choice"><input type="radio" name="goal" value="10"> 🌿 10 minutes a day</label>
-        <label class="choice"><input type="radio" name="goal" value="15"> 🌳 15 minutes a day</label>
+      <fieldset class="q-card q3">
+        <legend><span class="q-head"><span class="q-num">3</span><span class="q-title" data-i18n="s_q3">Daily goal</span></span></legend>
+        <div class="tiles goals">
+          <label class="tile"><input type="radio" name="goal" value="5" required><span class="emoji">🌱</span><span class="goal-text" data-min="5">5 minutes a day</span></label>
+          <label class="tile"><input type="radio" name="goal" value="10"><span class="emoji">🌿</span><span class="goal-text" data-min="10">10 minutes a day</span></label>
+          <label class="tile"><input type="radio" name="goal" value="15"><span class="emoji">🌳</span><span class="goal-text" data-min="15">15 minutes a day</span></label>
+        </div>
       </fieldset>
 
-      <button type="submit" class="big-button start">Start Lesson 1 ➜</button>
+      <button type="submit" class="start-btn"><span data-i18n="s_start">Start Lesson 1</span> <span aria-hidden="true">➜</span></button>
     </form>
 
-    <script>
+  </main>
+
+  <script>
+    // ---------- Words for this page, in all 11 languages ----------
+    const SETUP_WORDS = {
+      en: { s_title: "Let's get you set up", s_sub: "Just 3 quick questions before your first lesson.", s_q1: "Who are you learning for?", s_child: "My child", s_sibling: "My brother or sister", s_student: "My student", s_friend: "A friend", s_fun: "Just for fun", s_q2: "Who will you sign with?", s_optional: "(optional)", s_name_ph: "e.g. Riya", s_q3: "Daily goal", s_goal: "{n} minutes a day", s_start: "Start Lesson 1" },
+      hi: { s_title: "चलिए, शुरुआत करते हैं", s_sub: "पहले पाठ से पहले बस 3 छोटे सवाल।", s_q1: "आप किसके लिए सीख रहे हैं?", s_child: "मेरे बच्चे के लिए", s_sibling: "मेरे भाई या बहन के लिए", s_student: "मेरे छात्र के लिए", s_friend: "एक दोस्त के लिए", s_fun: "बस मज़े के लिए", s_q2: "आप किसके साथ संकेत करेंगे?", s_optional: "(वैकल्पिक)", s_name_ph: "जैसे रिया", s_q3: "रोज़ का लक्ष्य", s_goal: "रोज़ {n} मिनट", s_start: "पहला पाठ शुरू करें" },
+      bn: { s_title: "চলুন, শুরু করা যাক", s_sub: "প্রথম পাঠের আগে মাত্র 3টি ছোট প্রশ্ন।", s_q1: "আপনি কার জন্য শিখছেন?", s_child: "আমার সন্তানের জন্য", s_sibling: "আমার ভাই বা বোনের জন্য", s_student: "আমার ছাত্রছাত্রীর জন্য", s_friend: "একজন বন্ধুর জন্য", s_fun: "শুধু মজার জন্য", s_q2: "আপনি কার সঙ্গে সংকেত করবেন?", s_optional: "(ঐচ্ছিক)", s_name_ph: "যেমন রিয়া", s_q3: "প্রতিদিনের লক্ষ্য", s_goal: "প্রতিদিন {n} মিনিট", s_start: "প্রথম পাঠ শুরু করুন" },
+      mr: { s_title: "चला, सुरुवात करूया", s_sub: "पहिल्या धड्याआधी फक्त 3 छोटे प्रश्न.", s_q1: "तुम्ही कोणासाठी शिकत आहात?", s_child: "माझ्या मुलासाठी", s_sibling: "माझ्या भावासाठी किंवा बहिणीसाठी", s_student: "माझ्या विद्यार्थ्यासाठी", s_friend: "एका मित्रासाठी", s_fun: "फक्त गंमत म्हणून", s_q2: "तुम्ही कोणासोबत संकेत कराल?", s_optional: "(ऐच्छिक)", s_name_ph: "उदा. रिया", s_q3: "रोजचे ध्येय", s_goal: "रोज {n} मिनिटे", s_start: "पहिला धडा सुरू करा" },
+      te: { s_title: "రండి, మొదలుపెడదాం", s_sub: "మొదటి పాఠానికి ముందు కేవలం 3 చిన్న ప్రశ్నలు.", s_q1: "మీరు ఎవరి కోసం నేర్చుకుంటున్నారు?", s_child: "నా బిడ్డ కోసం", s_sibling: "నా సోదరుడు లేదా సోదరి కోసం", s_student: "నా విద్యార్థి కోసం", s_friend: "ఒక స్నేహితుడి కోసం", s_fun: "సరదాగా", s_q2: "మీరు ఎవరితో సంజ్ఞలు చేస్తారు?", s_optional: "(ఐచ్ఛికం)", s_name_ph: "ఉదా. రియా", s_q3: "రోజువారీ లక్ష్యం", s_goal: "రోజుకు {n} నిమిషాలు", s_start: "మొదటి పాఠం ప్రారంభించండి" },
+      ta: { s_title: "வாருங்கள், தொடங்கலாம்", s_sub: "முதல் பாடத்துக்கு முன் 3 சிறிய கேள்விகள் மட்டும்.", s_q1: "நீங்கள் யாருக்காகக் கற்கிறீர்கள்?", s_child: "என் குழந்தைக்காக", s_sibling: "என் சகோதரன் அல்லது சகோதரிக்காக", s_student: "என் மாணவருக்காக", s_friend: "ஒரு நண்பருக்காக", s_fun: "சும்மா ஆர்வத்துக்காக", s_q2: "யாருடன் சைகை செய்வீர்கள்?", s_optional: "(விருப்பம்)", s_name_ph: "எ.கா. ரியா", s_q3: "தினசரி இலக்கு", s_goal: "தினமும் {n} நிமிடங்கள்", s_start: "முதல் பாடத்தைத் தொடங்கு" },
+      gu: { s_title: "ચાલો, શરૂઆત કરીએ", s_sub: "પહેલા પાઠ પહેલાં ફક્ત 3 નાના પ્રશ્નો.", s_q1: "તમે કોના માટે શીખો છો?", s_child: "મારા બાળક માટે", s_sibling: "મારા ભાઈ કે બહેન માટે", s_student: "મારા વિદ્યાર્થી માટે", s_friend: "એક મિત્ર માટે", s_fun: "બસ મજા માટે", s_q2: "તમે કોની સાથે સંકેત કરશો?", s_optional: "(વૈકલ્પિક)", s_name_ph: "દા.ત. રિયા", s_q3: "રોજનું લક્ષ્ય", s_goal: "રોજ {n} મિનિટ", s_start: "પહેલો પાઠ શરૂ કરો" },
+      kn: { s_title: "ಬನ್ನಿ, ಶುರು ಮಾಡೋಣ", s_sub: "ಮೊದಲ ಪಾಠಕ್ಕೂ ಮೊದಲು ಕೇವಲ 3 ಚಿಕ್ಕ ಪ್ರಶ್ನೆಗಳು.", s_q1: "ನೀವು ಯಾರಿಗಾಗಿ ಕಲಿಯುತ್ತಿದ್ದೀರಿ?", s_child: "ನನ್ನ ಮಗುವಿಗಾಗಿ", s_sibling: "ನನ್ನ ಸಹೋದರ ಅಥವಾ ಸಹೋದರಿಗಾಗಿ", s_student: "ನನ್ನ ವಿದ್ಯಾರ್ಥಿಗಾಗಿ", s_friend: "ಒಬ್ಬ ಸ್ನೇಹಿತರಿಗಾಗಿ", s_fun: "ಸುಮ್ಮನೆ ಮೋಜಿಗಾಗಿ", s_q2: "ನೀವು ಯಾರ ಜೊತೆ ಸಂಜ್ಞೆ ಮಾಡುತ್ತೀರಿ?", s_optional: "(ಐಚ್ಛಿಕ)", s_name_ph: "ಉದಾ. ರಿಯಾ", s_q3: "ದಿನದ ಗುರಿ", s_goal: "ದಿನಕ್ಕೆ {n} ನಿಮಿಷ", s_start: "ಮೊದಲ ಪಾಠ ಪ್ರಾರಂಭಿಸಿ" },
+      or: { s_title: "ଆସନ୍ତୁ, ଆରମ୍ଭ କରିବା", s_sub: "ପ୍ରଥମ ପାଠ ପୂର୍ବରୁ କେବଳ 3ଟି ଛୋଟ ପ୍ରଶ୍ନ।", s_q1: "ଆପଣ କାହା ପାଇଁ ଶିଖୁଛନ୍ତି?", s_child: "ମୋ ପିଲା ପାଇଁ", s_sibling: "ମୋ ଭାଇ କିମ୍ବା ଭଉଣୀ ପାଇଁ", s_student: "ମୋ ଛାତ୍ର ପାଇଁ", s_friend: "ଜଣେ ସାଙ୍ଗ ପାଇଁ", s_fun: "କେବଳ ମଜା ପାଇଁ", s_q2: "ଆପଣ କାହା ସହ ସଙ୍କେତ କରିବେ?", s_optional: "(ଇଚ୍ଛାଧୀନ)", s_name_ph: "ଯେମିତି ରିୟା", s_q3: "ଦୈନିକ ଲକ୍ଷ୍ୟ", s_goal: "ଦିନକୁ {n} ମିନିଟ୍", s_start: "ପ୍ରଥମ ପାଠ ଆରମ୍ଭ କରନ୍ତୁ" },
+      ml: { s_title: "വരൂ, തുടങ്ങാം", s_sub: "ആദ്യ പാഠത്തിന് മുമ്പ് 3 ചെറിയ ചോദ്യങ്ങൾ മാത്രം.", s_q1: "നിങ്ങൾ ആർക്കുവേണ്ടിയാണ് പഠിക്കുന്നത്?", s_child: "എന്റെ കുട്ടിക്കുവേണ്ടി", s_sibling: "എന്റെ സഹോദരനോ സഹോദരിക്കോ വേണ്ടി", s_student: "എന്റെ വിദ്യാർത്ഥിക്കുവേണ്ടി", s_friend: "ഒരു സുഹൃത്തിനുവേണ്ടി", s_fun: "വെറുതെ രസത്തിന്", s_q2: "നിങ്ങൾ ആരോടൊപ്പം ആംഗ്യം കാണിക്കും?", s_optional: "(നിർബന്ധമില്ല)", s_name_ph: "ഉദാ. റിയ", s_q3: "ദിവസ ലക്ഷ്യം", s_goal: "ദിവസവും {n} മിനിറ്റ്", s_start: "ആദ്യ പാഠം തുടങ്ങുക" },
+      pa: { s_title: "ਆਓ, ਸ਼ੁਰੂ ਕਰੀਏ", s_sub: "ਪਹਿਲੇ ਪਾਠ ਤੋਂ ਪਹਿਲਾਂ ਬੱਸ 3 ਛੋਟੇ ਸਵਾਲ।", s_q1: "ਤੁਸੀਂ ਕਿਸ ਲਈ ਸਿੱਖ ਰਹੇ ਹੋ?", s_child: "ਮੇਰੇ ਬੱਚੇ ਲਈ", s_sibling: "ਮੇਰੇ ਭਰਾ ਜਾਂ ਭੈਣ ਲਈ", s_student: "ਮੇਰੇ ਵਿਦਿਆਰਥੀ ਲਈ", s_friend: "ਇੱਕ ਦੋਸਤ ਲਈ", s_fun: "ਬੱਸ ਮਜ਼ੇ ਲਈ", s_q2: "ਤੁਸੀਂ ਕਿਸ ਨਾਲ ਸੰਕੇਤ ਕਰੋਗੇ?", s_optional: "(ਮਰਜ਼ੀ ਨਾਲ)", s_name_ph: "ਜਿਵੇਂ ਰੀਆ", s_q3: "ਰੋਜ਼ਾਨਾ ਟੀਚਾ", s_goal: "ਰੋਜ਼ {n} ਮਿੰਟ", s_start: "ਪਹਿਲਾ ਪਾਠ ਸ਼ੁਰੂ ਕਰੋ" },
+    };
+    Object.keys(SETUP_WORDS).forEach((code) => {
+      if (I18N[code]) Object.assign(I18N[code], SETUP_WORDS[code]);
+    });
+    applyI18n();
+    document.querySelectorAll(".goal-text").forEach((el) => {
+      el.textContent = t("s_goal", { n: el.dataset.min });
+    });
+
+    // ---------- Fill in last time's answers, if any ----------
     const setupForm = document.getElementById("setup-form");
+    const nameBox = document.getElementById("their-name");
+    try {
+      const saved = JSON.parse(localStorage.getItem("signify-profile") || "{}");
+      if (saved.who)  { const r = setupForm.querySelector('input[name="who"][value="' + saved.who + '"]');  if (r) r.checked = true; }
+      if (saved.goal) { const r = setupForm.querySelector('input[name="goal"][value="' + saved.goal + '"]'); if (r) r.checked = true; }
+      if (saved.name) nameBox.value = saved.name;
+    } catch (e) {}
 
+    // ---------- Progress bar + "ready" button ----------
+    const bars = document.querySelectorAll(".setup-steps i");
+    const startBtn = setupForm.querySelector(".start-btn");
+    function updateSteps() {
+      const done = [
+        !!setupForm.querySelector('input[name="who"]:checked'),
+        nameBox.value.trim() !== "",
+        !!setupForm.querySelector('input[name="goal"]:checked'),
+      ];
+      bars.forEach((b, i) => b.classList.toggle("on", done[i]));
+      const ready = done[0] && done[2];
+      if (ready && !startBtn.classList.contains("ready")) startBtn.classList.add("ready");
+      if (!ready) startBtn.classList.remove("ready");
+    }
+    setupForm.addEventListener("change", updateSteps);
+    nameBox.addEventListener("input", updateSteps);
+    updateSteps();
+
+    // ---------- Save and go to the first lesson ----------
     setupForm.addEventListener("submit", function (event) {
-      event.preventDefault();   // stop the page from reloading
-
-      // Read the answers
-      const who  = document.querySelector('input[name="who"]:checked').value;
-      const name = document.getElementById("their-name").value.trim();
-      const goal = document.querySelector('input[name="goal"]:checked').value;
-
-      // Save them in the browser so other pages can use them
-      const profile = { who: who, name: name, goal: goal };
-      try {
-        localStorage.setItem("signify-profile", JSON.stringify(profile));
-      } catch (error) {
-        // If saving fails (e.g. private browsing), the app still works
-      }
-
-      // Go to Lesson 1
-      window.location.href = "lesson1.html";
+      event.preventDefault();
+      const profile = {
+        who:  setupForm.querySelector('input[name="who"]:checked').value,
+        name: nameBox.value.trim(),
+        goal: setupForm.querySelector('input[name="goal"]:checked').value,
+      };
+      try { localStorage.setItem("signify-profile", JSON.stringify(profile)); } catch (e) {}
+      window.location.href = "lesson.html?stop=1";
     });
   </script>
-
-  </main>
 </body>
 </html>
