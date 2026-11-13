@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Signify · River</title>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Hind:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="main.css">
+  <link rel="stylesheet" href="river.css">
+  <script src="i18n.js"></script>
+</head>
+<body class="ocean-page">
+  <main>
+
+    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+      <a href="main.html" class="back">← <span data-i18n="home">Home</span></a>
+      <span data-lang-slot></span>
+    </div>
+
+    <!-- CHAPTER HEADER -->
+    <section class="chapter-head">
+      <p class="chapter-num" data-i18n="chapter1">Chapter 1</p>
+      <h1 data-i18n="chapter_name">Everyday words</h1>
+      <p class="chapter-progress" id="chapter-progress">0 of 9 stops done</p>
+    </section>
+
+    <!-- THE RIVER -->
+    <section class="river">
+
+      <div class="stop">
+        <a href="lesson.html?stop=1" class="node learn">🥘</a>
+        <span class="label" data-i18n="stop_food">Food</span>
+      </div>
+
+      <div class="stop">
+        <a href="lesson.html?stop=2" class="node quiz">✏️</a>
+        <span class="label" data-i18n="stop_quiz">Quiz</span>
+      </div>
+
+      <div class="stop">
+        <a href="lesson.html?stop=3" class="node learn">🏡</a>
+        <span class="label" data-i18n="stop_family">Family</span>
+      </div>
+
+      <div class="stop">
+        <a href="lesson.html?stop=4" class="node quiz">✏️</a>
+        <span class="label" data-i18n="stop_quiz">Quiz</span>
+      </div>
+
+      <div class="stop">
+        <a href="lesson.html?stop=5" class="node learn">😴</a>
+        <span class="label" data-i18n="stop_needs">Needs</span>
+      </div>
+
+      <div class="stop">
+        <a href="lesson.html?stop=6" class="node learn">🙋</a>
+        <span class="label" data-i18n="stop_help">Help</span>
+      </div>
+
+      <div class="stop">
+        <a href="lesson.html?stop=7" class="node quiz">✏️</a>
+        <span class="label" data-i18n="stop_quiz">Quiz</span>
+      </div>
+
+      <div class="stop">
+        <a href="lesson.html?stop=8" class="node learn">😊</a>
+        <span class="label" data-i18n="stop_feelings">Feelings</span>
+      </div>
+
+      <div class="stop">
+        <a href="lesson.html?stop=9" class="node final">🏆</a>
+        <span class="label" data-i18n="stop_final">Final test</span>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // Words in the chosen language, and "X of 9 stops done"
+    applyI18n();
+    let riverProgress = 0;
+    try { riverProgress = parseInt(localStorage.getItem("signify-progress")) || 0; } catch (e) {}
+    const stopCount = document.querySelectorAll(".river .stop").length;
+    document.getElementById("chapter-progress").textContent =
+      t("stops_done", { a: Math.min(riverProgress, stopCount), b: stopCount });
+  </script>
+  <script src="river.js" defer></script>
+</body>
+</html>
