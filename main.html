@@ -8,6 +8,25 @@
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="home.css">
   <script src="i18n.js"></script>
+  <style>
+    /* Profile card (replaces Sign of the day) */
+    .profile-card.needs-setup { background: #8B7CF6; border-color: #8B7CF6; color: #fff; box-shadow: 0 5px 0 #6A5AD9; }
+    .profile-card.needs-setup:hover { box-shadow: 0 8px 0 #6A5AD9; }
+    .profile-card.needs-setup .home-muted { color: #EDE9FF; font-size: 1rem; }
+    .profile-card.needs-setup .home-tile-title { font-size: 1.5rem; }
+    .pc-avatar { width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      background: #F1EEFE; color: #4B3DC4; font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 1.6rem; }
+    .pc-avatar svg { width: 28px; height: 28px; }
+    .needs-setup .pc-avatar { background: rgba(255, 255, 255, 0.22); color: #fff; animation: pc-bounce 2.4s ease-in-out infinite; }
+    @keyframes pc-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    .pc-facts { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pc-facts:empty { display: none; }
+    .pc-facts span { padding: 5px 12px; border-radius: 99px; background: #F1EEFE; color: #4B3DC4; font-weight: 600; font-size: 0.9rem; }
+    .pc-btn { margin-top: auto; align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; min-height: 46px; padding: 0 20px;
+      border-radius: 16px; background: #F1EEFE; color: #4B3DC4; font-family: "Baloo 2", sans-serif; font-weight: 800; font-size: 1.1rem; }
+    .needs-setup .pc-btn { background: #FFC24B; color: #28264A; box-shadow: 0 4px 0 #E0A030; font-size: 1.2rem; }
+    @media (prefers-reduced-motion: reduce) { .needs-setup .pc-avatar { animation: none; } }
+  </style>
 </head>
 <body class="home-page" data-lang-ask>
 
@@ -22,7 +41,7 @@
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2.5 1.5-3.5 2-5.5 1.5 1 2 2.5 2 2.5S12 7 12 3z"/></svg>
           <span id="streak-text">1 day streak</span>
         </span>
-        <a href="setup.html" class="home-avatar" id="avatar" aria-label="Your profile" data-i18n-aria="profile">?</a>
+        <a href="setup.html" class="home-avatar" id="avatar" aria-label="Your profile" data-i18n-aria="profile"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></a>
       </div>
     </header>
 
@@ -91,15 +110,14 @@
     <!-- THREE TILES -->
     <section class="home-tiles">
 
-      <div class="home-card sotd">
-        <div class="sotd-video" id="sotd-video">
-          <span class="sotd-tag" data-i18n="sotd">Sign of the day</span>
-          <button type="button" class="sotd-play" id="sotd-play" aria-label="Play the sign of the day" data-i18n-aria="play_sotd">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
-          </button>
+      <a href="setup.html" class="home-card home-tile profile-card needs-setup" id="profile-card">
+        <div class="home-tile-head">
+          <span class="pc-avatar" id="pc-avatar" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg></span>
+          <div><div class="home-tile-title" id="pc-title">Set up your profile</div><div class="home-muted" id="pc-sub">Choose who you're learning for and a daily goal.</div></div>
         </div>
-        <div class="sotd-word"><span id="sotd-en"></span><span lang="hi" id="sotd-hi"></span></div>
-      </div>
+        <div class="pc-facts" id="pc-facts"></div>
+        <span class="pc-btn"><span id="pc-btn">Set up</span> <span aria-hidden="true">➜</span></span>
+      </a>
 
       <a href="progress.html" class="home-card home-tile">
         <div class="home-tile-head">
@@ -173,7 +191,7 @@
 
   <script src="signs.js?v=3"></script>
   <script>
-    // ===== HOME PAGE: fill in name, progress, river, sign of the day =====
+    // ===== HOME PAGE: fill in name, progress, river, profile card =====
     applyI18n();
     if (LANG !== "en") document.getElementById("learn-hi").remove();
 
@@ -274,20 +292,38 @@
     });
     river.style.setProperty("--done", Math.max(next - 1, 0) / (stops.length - 1));
 
-    // Sign of the day: a different sign each day
-    const allKeys = Object.keys(signs);
-    const dayNumber = Math.floor(today.getTime() / 86400000);
-    const sotdKey = allKeys[dayNumber % allKeys.length];
-    const sotd = signs[sotdKey];
-    document.getElementById("sotd-en").textContent = wordIn(sotdKey, LANG);
-    document.getElementById("sotd-hi").textContent = LANG === "en" ? sotd.hi : sotd.en;
-    document.getElementById("sotd-hi").lang = LANG === "en" ? "hi" : "en";
-    document.getElementById("sotd-play").addEventListener("click", () => {
-      const box = document.getElementById("sotd-video");
-      box.innerHTML = '<iframe title="Sign of the day" allow="autoplay; encrypted-media" src="https://www.youtube-nocookie.com/embed/' +
-        sotd.video + "?start=" + sotd.start + "&end=" + sotd.end +
-        '&autoplay=1&mute=1&rel=0&playsinline=1&modestbranding=1&controls=0&iv_load_policy=3"></iframe>';
-    });
+    // Profile card: big "Set up" button until there's a profile, then a summary
+    const PC_WORDS = {
+      en: { pc_title: "Set up your profile", pc_sub: "Choose who you're learning for and a daily goal.", pc_btn: "Set up", pc_with: "Signing with {name}", pc_goal: "{n} min a day", pc_edit: "Edit profile", pc_done: "You're all set! Tap to change anything." },
+      hi: { pc_title: "अपनी प्रोफ़ाइल बनाएँ", pc_sub: "चुनें कि आप किसके लिए सीख रहे हैं, और रोज़ का लक्ष्य।", pc_btn: "बनाएँ", pc_with: "{name} के साथ संकेत", pc_goal: "रोज़ {n} मिनट", pc_edit: "प्रोफ़ाइल बदलें", pc_done: "सब तैयार है! कुछ भी बदलने के लिए टैप करें।" },
+      bn: { pc_title: "আপনার প্রোফাইল তৈরি করুন", pc_sub: "বেছে নিন কার জন্য শিখছেন, আর প্রতিদিনের লক্ষ্য।", pc_btn: "তৈরি করুন", pc_with: "{name}-এর সঙ্গে সংকেত", pc_goal: "প্রতিদিন {n} মিনিট", pc_edit: "প্রোফাইল বদলান", pc_done: "সব তৈরি! কিছু বদলাতে ট্যাপ করুন।" },
+      mr: { pc_title: "तुमचे प्रोफाइल तयार करा", pc_sub: "तुम्ही कोणासाठी शिकत आहात आणि रोजचे ध्येय निवडा.", pc_btn: "तयार करा", pc_with: "{name} सोबत संकेत", pc_goal: "रोज {n} मिनिटे", pc_edit: "प्रोफाइल बदला", pc_done: "सगळे तयार! काहीही बदलण्यासाठी टॅप करा." },
+      te: { pc_title: "మీ ప్రొఫైల్ సెటప్ చేయండి", pc_sub: "మీరు ఎవరి కోసం నేర్చుకుంటున్నారో, రోజువారీ లక్ష్యం ఎంచుకోండి.", pc_btn: "సెటప్ చేయండి", pc_with: "{name} తో సంజ్ఞలు", pc_goal: "రోజుకు {n} నిమిషాలు", pc_edit: "ప్రొఫైల్ మార్చండి", pc_done: "అంతా సిద్ధం! ఏదైనా మార్చడానికి నొక్కండి." },
+      ta: { pc_title: "உங்கள் சுயவிவரத்தை அமையுங்கள்", pc_sub: "யாருக்காகக் கற்கிறீர்கள், தினசரி இலக்கு என்ன என்று தேர்ந்தெடுங்கள்.", pc_btn: "அமை", pc_with: "{name} உடன் சைகை", pc_goal: "தினமும் {n} நிமிடம்", pc_edit: "சுயவிவரத்தை மாற்று", pc_done: "எல்லாம் தயார்! எதையும் மாற்ற தட்டவும்." },
+      gu: { pc_title: "તમારી પ્રોફાઇલ બનાવો", pc_sub: "તમે કોના માટે શીખો છો અને રોજનું લક્ષ્ય પસંદ કરો.", pc_btn: "બનાવો", pc_with: "{name} સાથે સંકેત", pc_goal: "રોજ {n} મિનિટ", pc_edit: "પ્રોફાઇલ બદલો", pc_done: "બધું તૈયાર! કંઈ પણ બદલવા ટૅપ કરો." },
+      kn: { pc_title: "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಹೊಂದಿಸಿ", pc_sub: "ಯಾರಿಗಾಗಿ ಕಲಿಯುತ್ತಿದ್ದೀರಿ ಮತ್ತು ದಿನದ ಗುರಿ ಆಯ್ಕೆಮಾಡಿ.", pc_btn: "ಹೊಂದಿಸಿ", pc_with: "{name} ಜೊತೆ ಸಂಜ್ಞೆ", pc_goal: "ದಿನಕ್ಕೆ {n} ನಿಮಿಷ", pc_edit: "ಪ್ರೊಫೈಲ್ ಬದಲಿಸಿ", pc_done: "ಎಲ್ಲಾ ಸಿದ್ಧ! ಏನನ್ನಾದರೂ ಬದಲಿಸಲು ಟ್ಯಾಪ್ ಮಾಡಿ." },
+      or: { pc_title: "ଆପଣଙ୍କ ପ୍ରୋଫାଇଲ୍ ତିଆରି କରନ୍ତୁ", pc_sub: "କାହା ପାଇଁ ଶିଖୁଛନ୍ତି ଓ ଦୈନିକ ଲକ୍ଷ୍ୟ ବାଛନ୍ତୁ।", pc_btn: "ତିଆରି କରନ୍ତୁ", pc_with: "{name}ଙ୍କ ସହ ସଙ୍କେତ", pc_goal: "ଦିନକୁ {n} ମିନିଟ୍", pc_edit: "ପ୍ରୋଫାଇଲ୍ ବଦଳାନ୍ତୁ", pc_done: "ସବୁ ପ୍ରସ୍ତୁତ! କିଛି ବଦଳାଇବାକୁ ଟ୍ୟାପ୍ କରନ୍ତୁ।" },
+      ml: { pc_title: "നിങ്ങളുടെ പ്രൊഫൈൽ ഒരുക്കുക", pc_sub: "ആർക്കുവേണ്ടി പഠിക്കുന്നുവെന്നും ദിവസ ലക്ഷ്യവും തിരഞ്ഞെടുക്കൂ.", pc_btn: "ഒരുക്കുക", pc_with: "{name}-നൊപ്പം ആംഗ്യം", pc_goal: "ദിവസവും {n} മിനിറ്റ്", pc_edit: "പ്രൊഫൈൽ മാറ്റുക", pc_done: "എല്ലാം തയ്യാർ! എന്തും മാറ്റാൻ ടാപ്പ് ചെയ്യൂ." },
+      pa: { pc_title: "ਆਪਣੀ ਪ੍ਰੋਫਾਈਲ ਬਣਾਓ", pc_sub: "ਚੁਣੋ ਕਿ ਤੁਸੀਂ ਕਿਸ ਲਈ ਸਿੱਖ ਰਹੇ ਹੋ ਅਤੇ ਰੋਜ਼ਾਨਾ ਟੀਚਾ।", pc_btn: "ਬਣਾਓ", pc_with: "{name} ਨਾਲ ਸੰਕੇਤ", pc_goal: "ਰੋਜ਼ {n} ਮਿੰਟ", pc_edit: "ਪ੍ਰੋਫਾਈਲ ਬਦਲੋ", pc_done: "ਸਭ ਤਿਆਰ! ਕੁਝ ਵੀ ਬਦਲਣ ਲਈ ਟੈਪ ਕਰੋ।" },
+    };
+    Object.keys(PC_WORDS).forEach((code) => { if (I18N[code]) Object.assign(I18N[code], PC_WORDS[code]); });
+
+    const pcCard = document.getElementById("profile-card");
+    if (profile) {
+      pcCard.classList.remove("needs-setup");
+      document.getElementById("pc-title").textContent = t("profile");
+      document.getElementById("pc-sub").textContent = t("pc_done");
+      document.getElementById("pc-btn").textContent = t("pc_edit");
+      if (profile.name) document.getElementById("pc-avatar").textContent = profile.name.charAt(0).toUpperCase();
+      const facts = document.getElementById("pc-facts");
+      const addFact = (text) => { const f = document.createElement("span"); f.textContent = text; facts.appendChild(f); };
+      if (profile.name) addFact("🤝 " + t("pc_with", { name: profile.name }));
+      if (profile.goal) addFact("🌱 " + t("pc_goal", { n: profile.goal }));
+    } else {
+      document.getElementById("pc-title").textContent = t("pc_title");
+      document.getElementById("pc-sub").textContent = t("pc_sub");
+      document.getElementById("pc-btn").textContent = t("pc_btn");
+    }
 
     // Recently learned: the signs from your latest finished lesson
     const learnStopsDone = Object.keys(lessons).filter((n) => Number(n) <= progress && lessons[n].type === "learn");
