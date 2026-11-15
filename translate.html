@@ -8,6 +8,36 @@
   <link rel="stylesheet" href="main.css">
   <link rel="stylesheet" href="translate.css">
   <script src="i18n.js"></script>
+  <style>
+    /* Language boxes + search-first layout (no word list, so lessons stay a surprise) */
+    .lang-box .lang-list.lang-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; overflow: visible; padding: 0; }
+    .lang-tiles button {
+      position: relative; min-height: 78px; padding: 10px 14px; border-radius: 20px; box-shadow: 0 4px 0 var(--line);
+      display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; text-align: left;
+    }
+    .lang-tiles .lt-name { font-size: 1.35rem; font-weight: 700; line-height: 1.2; }
+    .lang-tiles .lt-en { font-size: 0.85rem; font-weight: 600; color: var(--muted); }
+    .lang-tiles button:hover { border-color: var(--green); }
+    .lang-tiles button[aria-pressed="true"] .lt-en { color: #EDE9FF; }
+    .lang-tiles button[aria-pressed="true"]::after {
+      content: "✓"; position: absolute; top: 8px; right: 10px; width: 22px; height: 22px; border-radius: 50%;
+      display: grid; place-items: center; background: #fff; color: var(--green-dark); font-size: 0.8rem; font-weight: 800;
+    }
+    .dict-search.big { flex: none; min-height: 60px; border-radius: 20px; padding: 0 18px; box-shadow: 0 4px 0 var(--line); }
+    .dict-search.big input { font-size: 1.15rem; }
+    .word-grid .search-hint, .word-grid .no-results { grid-column: 1 / -1; }
+    .search-hint { margin: 0; display: flex; align-items: center; gap: 14px; padding: 18px; border-radius: 20px; border: 2px dashed var(--line); color: var(--muted); font-size: 1.05rem; }
+    .search-hint .hint-hand { font-size: 2rem; flex-shrink: 0; }
+    .sign-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; min-height: 260px;
+      padding: 24px; text-align: center; color: var(--muted); font-size: 1.05rem; border-radius: 20px; background: #F7F5FF; }
+    .sign-empty .empty-play { width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center; background: #E7E1FF; color: var(--green-dark); }
+    @media (max-width: 600px) {
+      .lang-box .lang-list.lang-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .lang-tiles button { min-height: 68px; }
+      .lang-tiles .lt-name { font-size: 1.2rem; }
+      .sign-panel { order: 0; }
+    }
+  </style>
 </head>
 <body class="dict-page">
   <main>
@@ -23,7 +53,7 @@
 
     <div class="dict-title">
       <h1 data-i18n="dict_title">Sign dictionary</h1>
-      <p data-i18n="dict_sub">Pick your language, then tap a word to see its sign.</p>
+      <p id="tr-sub">Pick your language, then search for any word to see its sign.</p>
     </div>
 
     <!-- LANGUAGE PICKER -->
@@ -32,26 +62,28 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.5 3.8 5.5 3.8 9s-1.3 6.5-3.8 9c-2.5-2.5-3.8-5.5-3.8-9S9.5 5.5 12 3z"/></svg>
         <span data-i18n="your_lang">Your language</span>
       </div>
-      <div class="lang-list" id="lang-list" role="group" aria-label="Choose your language"></div>
+      <div class="lang-list lang-tiles" id="lang-list" role="group" aria-label="Choose your language"></div>
     </section>
 
     <div class="dict-body">
 
       <!-- WORDS -->
       <section class="dict-words">
-        <div class="dict-tools">
-          <div class="topic-tabs" id="topic-tabs" role="group" aria-label="Topic" data-i18n-aria="topic"></div>
-          <label class="dict-search">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-            <span class="visually-hidden" data-i18n="search">Search signs</span>
-            <input id="search" type="search" autocomplete="off" placeholder="Search signs…">
-          </label>
-        </div>
+        <label class="dict-search big">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <span class="visually-hidden" data-i18n="search">Search signs</span>
+          <input id="search" type="search" autocomplete="off" placeholder="Type a word, e.g. water">
+        </label>
         <div class="word-grid" id="word-grid"></div>
       </section>
 
       <!-- THE SIGN -->
       <aside class="sign-panel" id="sign-panel" aria-live="polite">
+        <div class="sign-empty" id="sign-empty">
+          <span class="empty-play" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></span>
+          <span id="tr-empty">Search for a word and its sign will play here.</span>
+        </div>
+        <div id="sign-full" hidden>
         <div class="sign-frame" id="sign-frame">
           <div class="sign-video">
             <iframe id="sign-video" title="Sign video" allow="autoplay; encrypted-media"></iframe>
@@ -84,6 +116,7 @@
           <span data-i18n="practise_lesson">Practise in a lesson</span>
           <span class="go-arrow" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         </a>
+        </div>
       </aside>
     </div>
 
@@ -97,7 +130,24 @@
   <script src="signs.js?v=3"></script>
   <script>
     // ===== SIGN DICTIONARY =====
+    // This page's own words, in all 11 languages
+    const TR_WORDS = {
+      en: { tr_sub: "Pick your language, then search for any word to see its sign.", tr_ph: "Type a word, e.g. {w}", tr_empty: "Search for a word and its sign will play here.", tr_hint: "Type a word above to find its sign." },
+      hi: { tr_sub: "अपनी भाषा चुनें, फिर कोई भी शब्द खोजकर उसका संकेत देखें।", tr_ph: "कोई शब्द लिखें, जैसे {w}", tr_empty: "कोई शब्द खोजें, उसका संकेत यहाँ चलेगा।", tr_hint: "संकेत ढूँढने के लिए ऊपर कोई शब्द लिखें।" },
+      bn: { tr_sub: "আপনার ভাষা বেছে নিন, তারপর যেকোনো শব্দ খুঁজে তার সংকেত দেখুন।", tr_ph: "একটি শব্দ লিখুন, যেমন {w}", tr_empty: "একটি শব্দ খুঁজুন, তার সংকেত এখানে চলবে।", tr_hint: "সংকেত খুঁজতে উপরে একটি শব্দ লিখুন।" },
+      mr: { tr_sub: "तुमची भाषा निवडा, मग कोणताही शब्द शोधून त्याचा संकेत पाहा.", tr_ph: "एखादा शब्द लिहा, उदा. {w}", tr_empty: "एखादा शब्द शोधा, त्याचा संकेत इथे दिसेल.", tr_hint: "संकेत शोधण्यासाठी वर एखादा शब्द लिहा." },
+      te: { tr_sub: "మీ భాషను ఎంచుకుని, ఏ పదమైనా వెతికి దాని సంజ్ఞ చూడండి.", tr_ph: "ఒక పదం టైప్ చేయండి, ఉదా. {w}", tr_empty: "ఒక పదం వెతకండి, దాని సంజ్ఞ ఇక్కడ ప్లే అవుతుంది.", tr_hint: "సంజ్ఞ కనుగొనడానికి పైన ఒక పదం టైప్ చేయండి." },
+      ta: { tr_sub: "உங்கள் மொழியைத் தேர்ந்தெடுத்து, எந்தச் சொல்லையும் தேடி அதன் சைகையைப் பாருங்கள்.", tr_ph: "ஒரு சொல்லை எழுதுங்கள், எ.கா. {w}", tr_empty: "ஒரு சொல்லைத் தேடுங்கள், அதன் சைகை இங்கே இயங்கும்.", tr_hint: "சைகையைக் கண்டுபிடிக்க மேலே ஒரு சொல்லை எழுதுங்கள்." },
+      gu: { tr_sub: "તમારી ભાષા પસંદ કરો, પછી કોઈ પણ શબ્દ શોધીને તેનો સંકેત જુઓ.", tr_ph: "કોઈ શબ્દ લખો, દા.ત. {w}", tr_empty: "કોઈ શબ્દ શોધો, તેનો સંકેત અહીં ચાલશે.", tr_hint: "સંકેત શોધવા ઉપર કોઈ શબ્દ લખો." },
+      kn: { tr_sub: "ನಿಮ್ಮ ಭಾಷೆ ಆಯ್ಕೆಮಾಡಿ, ನಂತರ ಯಾವುದೇ ಪದ ಹುಡುಕಿ ಅದರ ಸಂಜ್ಞೆ ನೋಡಿ.", tr_ph: "ಒಂದು ಪದ ಬರೆಯಿರಿ, ಉದಾ. {w}", tr_empty: "ಒಂದು ಪದ ಹುಡುಕಿ, ಅದರ ಸಂಜ್ಞೆ ಇಲ್ಲಿ ಪ್ಲೇ ಆಗುತ್ತದೆ.", tr_hint: "ಸಂಜ್ಞೆ ಹುಡುಕಲು ಮೇಲೆ ಒಂದು ಪದ ಬರೆಯಿರಿ." },
+      or: { tr_sub: "ଆପଣଙ୍କ ଭାଷା ବାଛନ୍ତୁ, ତା'ପରେ ଯେକୌଣସି ଶବ୍ଦ ଖୋଜି ତାର ସଙ୍କେତ ଦେଖନ୍ତୁ।", tr_ph: "ଏକ ଶବ୍ଦ ଲେଖନ୍ତୁ, ଯେମିତି {w}", tr_empty: "ଏକ ଶବ୍ଦ ଖୋଜନ୍ତୁ, ତାର ସଙ୍କେତ ଏଠାରେ ଚାଲିବ।", tr_hint: "ସଙ୍କେତ ଖୋଜିବାକୁ ଉପରେ ଏକ ଶବ୍ଦ ଲେଖନ୍ତୁ।" },
+      ml: { tr_sub: "നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കൂ, എന്നിട്ട് ഏത് വാക്കും തിരഞ്ഞ് അതിന്റെ ആംഗ്യം കാണൂ.", tr_ph: "ഒരു വാക്ക് എഴുതൂ, ഉദാ. {w}", tr_empty: "ഒരു വാക്ക് തിരയൂ, അതിന്റെ ആംഗ്യം ഇവിടെ കാണാം.", tr_hint: "ആംഗ്യം കണ്ടെത്താൻ മുകളിൽ ഒരു വാക്ക് എഴുതൂ." },
+      pa: { tr_sub: "ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ, ਫਿਰ ਕੋਈ ਵੀ ਸ਼ਬਦ ਲੱਭ ਕੇ ਉਸਦਾ ਸੰਕੇਤ ਦੇਖੋ।", tr_ph: "ਕੋਈ ਸ਼ਬਦ ਲਿਖੋ, ਜਿਵੇਂ {w}", tr_empty: "ਕੋਈ ਸ਼ਬਦ ਲੱਭੋ, ਉਸਦਾ ਸੰਕੇਤ ਇੱਥੇ ਚੱਲੇਗਾ।", tr_hint: "ਸੰਕੇਤ ਲੱਭਣ ਲਈ ਉੱਪਰ ਕੋਈ ਸ਼ਬਦ ਲਿਖੋ।" },
+    };
+    Object.keys(TR_WORDS).forEach((code) => { if (I18N[code]) Object.assign(I18N[code], TR_WORDS[code]); });
     applyI18n();
+    document.getElementById("tr-sub").textContent = t("tr_sub");
+    document.getElementById("tr-empty").textContent = t("tr_empty");
 
     // Topics come from the learn stops in signs.js (Food, Family, ...)
     const topics = Object.keys(lessons)
@@ -105,80 +155,74 @@
       .map((n, i) => ({ stop: Number(n), name: stops[n - 1], words: lessons[n].words, index: i }));
     const topicOf = (key) => topics.find((tp) => tp.words.includes(key));
 
-    // The app's language (chosen with the language buttons; saved in i18n.js)
+    // The app's language (chosen with the language boxes; saved in i18n.js)
     let lang = LANG;
 
-    let topic = "all";
+    // No word is shown until someone searches for it (or arrives with ?word=)
     let current = new URLSearchParams(location.search).get("word");
-    if (!signs[current]) current = Object.keys(signs)[0];
+    if (!signs[current]) current = null;
     let speed = 1;
 
     const langList = document.getElementById("lang-list");
-    const tabs = document.getElementById("topic-tabs");
     const grid = document.getElementById("word-grid");
     const search = document.getElementById("search");
     const video = document.getElementById("sign-video");
 
-    // Language buttons
+    // Language boxes
     languages.forEach((l) => {
       const b = document.createElement("button");
       b.type = "button";
-      b.textContent = l.name;
       b.lang = l.code;
       b.dataset.code = l.code;
+      b.innerHTML = '<span class="lt-name"></span><span class="lt-en" lang="en"></span>';
+      b.querySelector(".lt-name").textContent = l.name;
+      b.querySelector(".lt-en").textContent = l.code === "en" ? "" : l.english;
       // Switching language here switches the whole app, so the page reloads in it
-      b.addEventListener("click", () => setLang(l.code, "translate.html?word=" + current));
+      b.addEventListener("click", () => setLang(l.code, "translate.html" + (current ? "?word=" + current : "")));
       langList.appendChild(b);
     });
 
-    // Topic tabs
-    [{ id: "all", name: t("all") }, ...topics.map((tp) => ({ id: tp.name, name: tStop(tp.name) }))].forEach((tp) => {
-      const b = document.createElement("button");
-      b.type = "button";
-      b.textContent = tp.name;
-      b.dataset.topic = tp.id;
-      b.addEventListener("click", () => { topic = tp.id; renderGrid(); });
-      tabs.appendChild(b);
-    });
+    search.addEventListener("input", renderResults);
 
-    search.addEventListener("input", renderGrid);
-
-    function renderGrid() {
-      tabs.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.topic === topic)));
+    // Only show words that match what was typed
+    function renderResults() {
       const q = search.value.trim().toLowerCase();
       grid.innerHTML = "";
-      let shown = 0;
-      Object.keys(signs).forEach((key) => {
-        const tp = topicOf(key);
-        if (topic !== "all" && (!tp || tp.name !== topic)) return;
-        if (q) {
-          const all = [signs[key].en, signs[key].hi, ...Object.values(translations[key] || {})].join(" ").toLowerCase();
-          if (!all.includes(q)) return;
-        }
-        shown++;
+      if (!q) {
+        grid.innerHTML = '<p class="search-hint"><span class="hint-hand" aria-hidden="true">👆</span><span></span></p>';
+        grid.querySelector("span:last-child").textContent = t("tr_hint");
+        return;
+      }
+      const matches = Object.keys(signs).filter((key) => {
+        const words = [signs[key].en, signs[key].hi, ...Object.values(translations[key] || {})];
+        return words.some((w) => String(w).toLowerCase().startsWith(q));
+      });
+      if (!matches.length) { grid.innerHTML = '<p class="no-results"></p>'; grid.firstChild.textContent = t("no_results"); return; }
+      matches.forEach((key) => {
         const b = document.createElement("button");
         b.type = "button";
         b.className = "word-btn";
         b.setAttribute("aria-pressed", String(key === current));
-        b.innerHTML = '<span class="word-tag"></span><span class="word-main-text"></span><span class="word-en-text"></span>';
-        const tag = b.querySelector(".word-tag");
-        tag.textContent = tp ? tStop(tp.name) : "";
-        if (tp) tag.classList.add("t" + (tp.index % 2));
-        b.querySelector(".word-main-text").textContent = wordIn(key, lang);
+        b.innerHTML = '<span class="word-main-text"></span><span class="word-en-text"></span>';
+        b.querySelector(".word-main-text").textContent = signs[key].emoji + " " + wordIn(key, lang);
         b.querySelector(".word-main-text").lang = lang;
         b.querySelector(".word-en-text").textContent = lang === "en" ? signs[key].hi : signs[key].en;
         b.addEventListener("click", () => {
           current = key;
-          renderGrid();
+          renderResults();
           showSign();
           if (window.innerWidth <= 600) document.getElementById("sign-panel").scrollIntoView({ behavior: "smooth" });
         });
         grid.appendChild(b);
       });
-      if (!shown) { grid.innerHTML = '<p class="no-results"></p>'; grid.firstChild.textContent = t("no_results"); }
+      // Exactly one match: play it straight away
+      if (matches.length === 1 && current !== matches[0]) { current = matches[0]; renderResults(); showSign(); }
     }
 
     function showSign() {
+      document.getElementById("sign-empty").hidden = !!current;
+      document.getElementById("sign-full").hidden = !current;
+      if (!current) return;
       const s = signs[current];
       const L = languages.find((l) => l.code === lang);
       document.getElementById("sign-lang").textContent = L.name;
@@ -201,9 +245,9 @@
 
     function render() {
       langList.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.code === lang)));
-      const L = languages.find((l) => l.code === lang);
-      search.placeholder = t("search");
-      renderGrid();
+      search.placeholder = t("tr_ph", { w: wordIn("water", lang) });
+      if (current) search.value = wordIn(current, lang);
+      renderResults();
       showSign();
     }
 
